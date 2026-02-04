@@ -64,6 +64,11 @@ This section details the source code structure and the technologies powering the
     * **Transformers:** For abstractive text summarization.
     * **Torch:** Deep learning framework support.
 * **Data Layer:** SQLite3 for relational data management.
+**upload html referance image**
+<img width="1911" height="1001" alt="Screenshot 2026-02-04 204356" src="https://github.com/user-attachments/assets/5209d8a6-1dd5-4df1-8a99-ff4756fe9d9c" />
+
+**index html referance image**
+<img width="1919" height="1001" alt="Screenshot 2026-02-04 204348" src="https://github.com/user-attachments/assets/d4e98be9-d548-4bdd-a810-633db3269801" />
 
 ### 📂 Repository Structure
 | File/Directory | Description |
@@ -98,12 +103,6 @@ Status: Ingestion Interface
 URL: http://127.0.0.1:5500/templates/upload.html
 
 Function: Specialized interface for uploading legal PDF/Text documents for processing.
-
-**upload html referance image**
-<img width="1911" height="1001" alt="Screenshot 2026-02-04 204356" src="https://github.com/user-attachments/assets/5209d8a6-1dd5-4df1-8a99-ff4756fe9d9c" />
-
-**index html referance image**
-<img width="1919" height="1001" alt="Screenshot 2026-02-04 204348" src="https://github.com/user-attachments/assets/d4e98be9-d548-4bdd-a810-633db3269801" />
 
 cd legal-ai-system
 python -m venv .venv

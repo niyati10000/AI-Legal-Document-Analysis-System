@@ -98,7 +98,7 @@ git clone [https://github.com/your-repo/legal-ai-system.git](https://github.com/
 cd legal-ai-system
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
-
+'''
 ### Step 2: Install Dependencies
 pip install flask transformers torch pandas
 

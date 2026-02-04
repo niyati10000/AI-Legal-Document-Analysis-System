@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Document</title>
+    <style>
+        body { font-family: sans-serif; margin: 40px; }
+        .form-box { max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+        input, select, textarea { width: 100%; margin-bottom: 15px; padding: 8px; }
+        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="form-box">
+        <h2>Document Ingestion</h2>
+        <form method="POST">
+            <input type="text" name="title" placeholder="Document Title" required>
+            <select name="doc_type">
+                <option value="Contract">Contract</option>
+                <option value="Judgment">Court Judgment</option>
+                <option value="Case Law">Case Law</option>
+            </select>
+            <textarea name="content" rows="10" placeholder="Paste legal text here..." required></textarea>
+            <button type="submit">Start Analysis</button>
+        </form>
+    </div>
+</body>
+</html>

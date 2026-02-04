@@ -79,6 +79,15 @@ This section details the source code structure and the technologies powering the
 
 ---
 
+**Dashboard / Index Page:**
+http://127.0.0.1:5500/templates/index.html
+
+**Upload Document Page:**
+http://127.0.0.1:5500/templates/upload.html
+
+**Flask Server Root:**
+http://127.0.0.1:5000/
+
 ## 5. Installation & Setup
 
 Follow these steps to deploy the system locally.
@@ -86,24 +95,17 @@ Follow these steps to deploy the system locally.
 ### Step 1: Clone and Configure
 ```bash
 git clone [https://github.com/your-repo/legal-ai-system.git](https://github.com/your-repo/legal-ai-system.git)
-
-** System Access & Interface**
-Once the server is running, you can access the application interfaces using the specific URLs below:
-
-🖥️ Dashboard View
-Status: Active System Monitor
-
-URL: http://127.0.0.1:5000/
-
-Function: Main landing page for system status and recent reports.
-
-📤 Document Ingestion & Upload
-Status: Ingestion Interface
-
-URL: http://127.0.0.1:5500/templates/upload.html
-
-Function: Specialized interface for uploading legal PDF/Text documents for processing.
-
 cd legal-ai-system
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+### Step 2: Install Dependencies
+pip install flask transformers torch pandas
+
+Step 3: Initialize Data Tier
+Bash
+python database.py
+
+Step 4: Launch Application Tier
+Bash
+python app.py

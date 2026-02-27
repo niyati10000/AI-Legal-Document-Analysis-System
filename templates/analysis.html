@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results - LexAI Legal Intelligence</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0c0f;
+            color: #e5e7eb;
+            line-height: 1.6;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1e24;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c5a47a;
+            border-radius: 4px;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(10, 12, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #2a2f36;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #c5a47a;
+        }
+
+        .logo span {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c5a47a, #e4c9a7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #c5a47a;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem 1rem;
+            background: #1a1e24;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid #2a2f36;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 5% 50px;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: #c5a47a;
+        }
+
+        .breadcrumb i {
+            font-size: 0.8rem;
+        }
+
+        /* Document Header */
+        .doc-header {
+            background: #1a1e24;
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid #2a2f36;
+            margin-bottom: 2rem;
+        }
+
+        .doc-title-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .doc-title h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .doc-meta {
+            display: flex;
+            gap: 2rem;
+            color: #9ca3af;
+        }
+
+        .doc-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .doc-meta-item i {
+            color: #c5a47a;
+        }
+
+        .doc-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            background: #2a2f36;
+            border: 1px solid #3a3f48;
+            color: #e5e7eb;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            border-color: #c5a47a;
+            color: #c5a47a;
+        }
+
+        .action-btn.primary {
+            background: #c5a47a;
+            color: #0a0c0f;
+            border: none;
+        }
+
+        .action-btn.primary:hover {
+            background: #b08f67;
+        }
+
+        /* Analysis Tabs */
+        .analysis-tabs {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 1px solid #2a2f36;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab:hover {
+            color: #c5a47a;
+        }
+
+        .tab.active {
+            color: #c5a47a;
+            border-bottom-color: #c5a47a;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Summary Section */
+        .summary-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background: #1a1e24;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #2a2f36;
+        }
+
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .summary-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #c5a47a;
+        }
+
+        .summary-length {
+            background: #2a2f36;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .summary-text {
+            line-height: 1.8;
+            color: #d1d5db;
+        }
+
+        .key-points {
+            margin-top: 1.5rem;
+        }
+
+        .key-points h4 {
+            color: #c5a47a;
+            margin-bottom: 1rem;
+        }
+
+        .points-list {
+            list-style: none;
+        }
+
+        .points-list li {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .points-list li i {
+            color: #10b981;
+            margin-top: 3px;
+        }
+
+        /* Bias Section */
+        .bias-section {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .bias-score-card {
+            background: #1a1e24;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #2a2f36;
+            text-align: center;
+        }
+
+        .bias-gauge {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .gauge-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .gauge-label {
+            color: #9ca3af;
+            margin-bottom: 0.5rem;
+        }
+
+        .bias-type-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .bias-type-badge.high {
+            background: #ef444420;
+            color: #ef4444;
+        }
+
+        .bias-type-badge.medium {
+            background: #f59e0b20;
+            color: #f59e0b;
+        }
+
+        .bias-type-badge.low {
+            background: #10b98120;
+            color: #10b981;
+        }
+
+        .bias-details {
+            background: #1a1e24;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #2a2f36;
+        }
+
+        .bias-explanation {
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .bias-categories {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .category-item {
+            background: #2a2f36;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-bar {
+            height: 6px;
+            background: #3a3f48;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .category-fill {
+            height: 100%;
+            background: #c5a47a;
+            border-radius: 3px;
+        }
+
+        /* Entity Extraction */
+        .entities-section {
+            background: #1a1e24;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #2a2f36;
+        }
+
+        .entities-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .entity-category {
+            background: #2a2f36;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .entity-category h4 {
+            color: #c5a47a;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .entity-list {
+            list-style: none;
+        }
+
+        .entity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #3a3f48;
+        }
+
+        .entity-item:last-child {
+            border-bottom: none;
+        }
+
+        .entity-name {
+            font-weight: 500;
+        }
+
+        .entity-count {
+            background: #1a1e24;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: #c5a47a;
+        }
+
+        /* Original Text */
+        .original-text {
+            background: #1a1e24;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #2a2f36;
+        }
+
+        .text-content {
+            background: #2a2f36;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        /* Export Options */
+        .export-menu {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #c5a47a;
+            color: #0a0c0f;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(197, 164, 122, 0.3);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .export-menu:hover {
+            transform: scale(1.1);
+        }
+
+        .export-options {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            background: #1a1e24;
+            border: 1px solid #2a2f36;
+            border-radius: 8px;
+            padding: 0.5rem;
+            display: none;
+            min-width: 150px;
+        }
+
+        .export-menu:hover .export-options {
+            display: block;
+        }
+
+        .export-option {
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .export-option:hover {
+            background: #2a2f36;
+            color: #c5a47a;
+        }
+
+        @media (max-width: 1024px) {
+            .summary-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .bias-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .entities-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .doc-title-section {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .entities-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .bias-categories {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-scale-balanced"></i>
+                <span>LexAI</span>
+            </div>
+            <div class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+                <a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="/documents"><i class="fas fa-file-alt"></i> Documents</a>
+                <a href="/analytics"><i class="fas fa-chart-pie"></i> Analytics</a>
+                <a href="/help"><i class="fas fa-question-circle"></i> Help</a>
+            </div>
+            <div class="user-menu">
+                <i class="fas fa-user-circle"></i>
+                <span>Legal AI User</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="/">Home</a>
+            <i class="fas fa-chevron-right"></i>
+            <a href="/documents">Documents</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>Analysis Results</span>
+        </div>
+
+        <!-- Document Header -->
+        <div class="doc-header">
+            <div class="doc-title-section">
+                <div class="doc-title">
+                    <h1>{{ document['title'] if document else 'Employment Contract 2024' }}</h1>
+                    <div class="doc-meta">
+                        <span class="doc-meta-item">
+                            <i class="fas fa-tag"></i>
+                            {{ document['doc_type'] if document else 'Contract' }}
+                        </span>
+                        <span class="doc-meta-item">
+                            <i class="fas fa-calendar"></i>
+                            {{ document['uploaded_at'] if document else '2024-01-15' }}
+                        </span>
+                        <span class="doc-meta-item">
+                            <i class="fas fa-file-lines"></i>
+                            2,847 words
+                        </span>
+                    </div>
+                </div>
+                <div class="doc-actions">
+                    <button class="action-btn">
+                        <i class="fas fa-edit"></i>
+                        Edit
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-share-alt"></i>
+                        Share
+                    </button>
+                    <button class="action-btn primary">
+                        <i class="fas fa-download"></i>
+                        Download Report
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Tabs -->
+        <div class="analysis-tabs">
+            <div class="tab active" onclick="switchTab('summary')">
+                <i class="fas fa-file-lines"></i>
+                Summary
+            </div>
+            <div class="tab" onclick="switchTab('bias')">
+                <i class="fas fa-scale-balanced"></i>
+                Bias Analysis
+            </div>
+            <div class="tab" onclick="switchTab('entities')">
+                <i class="fas fa-tag"></i>
+                Entity Extraction
+            </div>
+            <div class="tab" onclick="switchTab('original')">
+                <i class="fas fa-file-alt"></i>
+                Original Text
+            </div>
+        </div>
+
+        <!-- Summary Tab Content -->
+        <div id="summary-tab" class="tab-content active">
+            <div class="summary-section">
+                <!-- AI Summary -->
+                <div class="summary-card">
+                    <div class="summary-header">
+                        <h3>
+                            <i class="fas fa-robot"></i>
+                            AI-Generated Summary
+                        </h3>
+                        <span class="summary-length">Medium Length</span>
+                    </div>
+                    <div class="summary-text">
+                        {% if summary %}
+                            {{ summary['summary_text'] }}
+                        {% else %}
+                            This employment agreement establishes the terms and conditions between the employer and employee. 
+                            Key provisions include compensation structure, benefits package, termination clauses, and intellectual 
+                            property rights. The contract spans a 12-month period with automatic renewal provisions. 
+                            Notable clauses include non-compete restrictions for 6 months post-termination and arbitration 
+                            requirements for dispute resolution.
+                        {% endif %}
+                    </div>
+                    
+                    <div class="key-points">
+                        <h4>Key Points</h4>
+                        <ul class="points-list">
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <strong>Compensation:</strong> Annual salary of $120,000 with performance bonus up to 15%
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <strong>Term:</strong> 12-month contract with automatic renewal
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <strong>IP Rights:</strong> Company retains all intellectual property created during employment
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <strong>Non-Compete:</strong> 6-month restriction within 50-mile radius
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Legal Analysis -->
+                <div class="summary-card">
+                    <div class="summary-header">
+                        <h3>
+                            <i class="fas fa-gavel"></i>
+                            Legal Analysis
+                        </h3>
+                    </div>
+                    <div class="summary-text">
+                        <p><strong>Risk Assessment:</strong> Medium risk</p>
+                        <p style="margin-top: 1rem;">The non-compete clause may be overly restrictive and could face challenges in certain jurisdictions. 
+                        The arbitration clause is standard but note that class action waivers may be subject to scrutiny. 
+                        Consider reviewing the automatic renewal provision to ensure compliance with state-specific requirements.</p>
+                        
+                        <div style="margin-top: 1.5rem;">
+                            <h4 style="color: #c5a47a; margin-bottom: 0.5rem;">Recommendations</h4>
+                            <ul class="points-list">
+                                <li>
+                                    <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
+                                    Review non-compete scope - may be unenforceable in California
+                                </li>
+                                <li>
+                                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                                    Compensation structure is compliant with minimum wage laws
+                                </li>
+                                <li>
+                                    <i class="fas fa-info-circle" style="color: #c5a47a;"></i>
+                                    Consider adding severability clause for stronger protection
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bias Tab Content -->
+        <div id="bias-tab" class="tab-content">
+            <div class="bias-section">
+                <!-- Bias Score -->
+                <div class="bias-score-card">
+                    <div class="bias-gauge">
+                        <canvas id="biasGauge" width="200" height="200"></canvas>
+                        <div class="gauge-value">0.35</div>
+                    </div>
+                    <div class="gauge-label">Bias Score</div>
+                    <div class="bias-type-badge low">Low Bias Risk</div>
+                    <p style="margin-top: 1rem; color: #9ca3af;">Confidence: 94%</p>
+                </div>
+
+                <!-- Bias Details -->
+                <div class="bias-details">
+                    <h3 style="margin-bottom: 1rem; color: #c5a47a;">Bias Analysis Report</h3>
+                    
+                    <div class="bias-explanation">
+                        {% if bias_report %}
+                            {{ bias_report['explanation'] }}
+                        {% else %}
+                            The document shows minimal gender or racial bias patterns. However, there are subtle socioeconomic 
+                            indicators in the language used for compensation discussions. The contract appears to use neutral 
+                            terminology throughout most sections, with some areas that could be made more inclusive.
+                        {% endif %}
+                    </div>
+
+                    <h4 style="margin-bottom: 1rem;">Category Breakdown</h4>
+                    <div class="bias-categories">
+                        <div class="category-item">
+                            <div class="category-header">
+                                <span>Gender Bias</span>
+                                <span>0.12</span>
+                            </div>
+                            <div class="category-bar">
+                                <div class="category-fill" style="width: 12%"></div>
+                            </div>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-header">
+                                <span>Racial Bias</span>
+                                <span>0.08</span>
+                            </div>
+                            <div class="category-bar">
+                                <div class="category-fill" style="width: 8%"></div>
+                            </div>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-header">
+                                <span>Socioeconomic</span>
+                                <span>0.35</span>
+                            </div>
+                            <div class="category-bar">
+                                <div class="category-fill" style="width: 35%"></div>
+                            </div>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-header">
+                                <span>Age Bias</span>
+                                <span>0.15</span>
+                            </div>
+                            <div class="category-bar">
+                                <div class="category-fill" style="width: 15%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h4 style="margin-bottom: 1rem;">Detected Patterns</h4>
+                        <ul class="points-list">
+                            <li>
+                                <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
+                                "Executive presence" terminology may carry implicit bias
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                                Pronouns are gender-neutral throughout
+                            </li>
+                            <li>
+                                <i class="fas fa-info-circle" style="color: #c5a47a;"></i>
+                                Compensation language favors traditional salary structures
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Entities Tab Content -->
+        <div id="entities-tab" class="tab-content">
+            <div class="entities-section">
+                <h3 style="color: #c5a47a;">Extracted Entities</h3>
+                <p style="color: #9ca3af; margin-bottom: 1.5rem;">Key information automatically extracted using BERT</p>
+
+                <div class="entities-grid">
+                    <!-- People -->
+                    <div class="entity-category">
+                        <h4>
+                            <i class="fas fa-user"></i>
+                            People (8)
+                        </h4>
+                        <ul class="entity-list">
+                            <li class="entity-item">
+                                <span class="entity-name">John Smith</span>
+                                <span class="entity-count">Employee</span>
+                            </li>
+                            <li class="entity-item">
+                                <span class="entity-name">Sarah Johnson</span>
+                                <span class="entity-count">HR Director</span>
+                            </li>
+                            <li class="entity-item">
+                                <span class="entity-name">Michael Chen</span>
+                                <span class="entity-count">Legal Counsel</span>
+                            </li>
+                            <li class="entity-item">
+                                <span class="entity-name">Emily Rodriguez</span>
+                                <span class="entity-count">Witness</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Organizations -->
+                    <div class="entity-category">
+                        <h4>
+                            <i class="fas fa-building"></i>
+                            Organizations (5)
+                        </h4>
+                        <ul class="entity-list">
+                            <li class="entity-item">
+                                <span class="entity-name">Acme Corporation</span>
+                                <span class="entity-count">Employer</span>
+                            </li>
+                            <li class="entity-item">
+                                <span class="entity-name">LegalTech Solutions</span>
+                                <span class="entity-count">Reviewer</span>
+                            </li>
+                            <li class="entity-item">
+                                <span class="entity-name">State Bar Association</span>
+                                <span class="entity-count">Regulator</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Dates -->
+                    <div class="entity-category">
+                        <h4>
+                            <i class="fas fa-calendar"></i>
+                            Dates (12)
+                        </h4>
+                        <ul class="entity-list">
+                            <li class="entity-item">
+                                <span class="entity-name">January 15, 2024</span>
+                                <span class="entity-count">Effective Date</span>
+                            </li>
+                            <li class="entity-item">
+                                <span class="entity-name">December 31, 2024</span>
+                                <span class="entity-count">Term End</span>
+                            </li>
+                            <li class="entity-item">
+                                <span class="entity-name">March 30, 2024</span>
+                                <span class="entity-count">Review Date</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Locations -->
+                    <div class="entity-category">
+                        <h4>
+                            <i class="fas fa-map-marker-alt"></i>
+                            Locations (6)
+                        </h4>
+                        <ul class="entity-list">
+                            <li class="entity-item">
+                                <span class="entity-name">Delaware</span>
+                                <span class="entity-count">Jurisdiction</span>
+                            </li>
+                            <li class="entity-item">
+                                <span class="entity-name">New York, NY</span>
+                                <span class="entity-count">Office</span>
+                            </li>
+                            <li class="entity-item">
+                                <span class="entity-name">50-mile radius</span>
+                                <span class="entity-count">Non-compete</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Monetary Values -->
+                    <div class="entity-category">
+                        <h4>
+                            <i class="fas fa-dollar-sign"></i>
+                            Monetary (7)
+                        </h4>
+                        <ul class="entity-list">
+                            <li class="entity-item">
+                                <span class="entity-name">$120,000</span>
+                                <span class="entity-count">Base Salary</span>
+                            </li>
+                            <li class="entity-item">
+                                <span class="entity-name">15%</span>
+                                <span class="entity-count">Bonus</span>
+                            </li>
+                            <li class="entity-item">
+                                <span class="entity-name">$5,000</span>
+                                <span class="entity-count">Signing Bonus</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Legal Terms -->
+                    <div class="entity-category">
+                        <h4>
+                            <i class="fas fa-gavel"></i>
+                            Legal Terms (15)
+                        </h4>
+                        <ul class="entity-list">
+                            <li class="entity-item">
+                                <span class="entity-name">Non-compete</span>
+                                <span class="entity-count">Clause</span>
+                            </li>
+                            <li class="entity-item">
+                                <span class="entity-name">Arbitration</span>
+                                <span class="entity-count">Provision</span>
+                            </li>
+                            <li class="entity-item">
+                                <span class="entity-name">IP Rights</span>
+                                <span class="entity-count">Section</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Original Text Tab Content -->
+        <div id="original-tab" class="tab-content">
+            <div class="original-text">
+                <h3 style="color: #c5a47a; margin-bottom: 1rem;">Original Document Text</h3>
+                <div class="text-content">
+                    EMPLOYMENT AGREEMENT
+
+                    This Employment Agreement (the "Agreement") is entered into as of January 15, 2024, by and between Acme Corporation, a Delaware corporation (the "Company"), and John Smith (the "Employee").
+
+                    1. POSITION AND DUTIES. The Company agrees to employ the Employee as Senior Software Engineer. The Employee shall report to the Chief Technology Officer and shall perform such duties as are customarily associated with such position.
+
+                    2. COMPENSATION.
+                    2.1 Base Salary. The Company shall pay the Employee a base salary at the rate of $120,000 per year, payable in accordance with the Company's standard payroll practices.
+                    2.2 Bonus. The Employee shall be eligible for an annual performance bonus of up to 15% of base salary, based on achievement of objectives set by the Company.
+                    2.3 Signing Bonus. The Company shall pay the Employee a one-time signing bonus of $5,000, payable within 30 days of the start date.
+
+                    3. BENEFITS. The Employee shall be entitled to participate in all employee benefit plans generally available to Company employees, including health insurance, 401(k) plan, and paid time off.
+
+                    4. TERM AND TERMINATION.
+                    4.1 Term. This Agreement shall have an initial term of one year, commencing on January 15, 2024, and shall automatically renew for successive one-year periods unless either party provides notice of non-renewal at least 60 days prior to the end of the then-current term.
+                    
+                    4.2 Termination. The Company may terminate this Agreement at any time with or without cause. The Employee may terminate this Agreement upon 30 days written notice.
+
+                    5. INTELLECTUAL PROPERTY. All inventions, discoveries, developments, and other works conceived or made by the Employee during employment shall be the sole and exclusive property of the Company.
+
+                    6. NON-COMPETE. For a period of six months following termination of employment, the Employee shall not, within a 50-mile radius of the Company's offices, engage in any business that competes with the Company.
+
+                    7. ARBITRATION. Any dispute arising out of or relating to this Agreement shall be resolved by binding arbitration in accordance with the rules of the American Arbitration Association.
+
+                    8. GOVERNING LAW. This Agreement shall be governed by the laws of the State of Delaware.
+
+                    IN WITNESS WHEREOF, the parties have executed this Agreement as of the date first written above.
+
+                    COMPANY:
+                    By: ________________________
+                    Name: Sarah Johnson
+                    Title: HR Director
+
+                    EMPLOYEE:
+                    ________________________
+                    John Smith
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Menu -->
+        <div class="export-menu">
+            <i class="fas fa-download"></i>
+            <div class="export-options">
+                <div class="export-option">
+                    <i class="fas fa-file-pdf"></i>
+                    Export as PDF
+                </div>
+                <div class="export-option">
+                    <i class="fas fa-file-word"></i>
+                    Export as DOCX
+                </div>
+                <div class="export-option">
+                    <i class="fas fa-file-csv"></i>
+                    Export as CSV
+                </div>
+                <div class="export-option">
+                    <i class="fas fa-print"></i>
+                    Print
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Add active class to clicked tab
+            event.currentTarget.classList.add('active');
+        }
+
+        // Bias Gauge Chart
+        const ctx = document.getElementById('biasGauge').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [35, 65],
+                    backgroundColor: ['#f59e0b', '#2a2f36'],
+                    borderWidth: 0,
+                    circumference: 180,
+                    rotation: 270
+                }]
+            },
+            options: {
+                cutout: '70%',
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // Highlight biased terms in original text (demo)
+        function highlightBiasedTerms() {
+            // This would be implemented in production
+            console.log('Highlighting biased terms');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Library - LexAI Legal Intelligence</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0c0f;
+            color: #e5e7eb;
+            line-height: 1.6;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1e24;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c5a47a;
+            border-radius: 4px;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(10, 12, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #2a2f36;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #c5a47a;
+        }
+
+        .logo span {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c5a47a, #e4c9a7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #c5a47a;
+        }
+
+        .nav-links a i {
+            font-size: 1.1rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem 1rem;
+            background: #1a1e24;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid #2a2f36;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 5% 50px;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-primary {
+            background: #c5a47a;
+            color: #0a0c0f;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #b08f67;
+            transform: translateY(-2px);
+        }
+
+        /* Search and Filter Bar */
+        .filter-bar {
+            background: #1a1e24;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #2a2f36;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            align-items: center;
+            background: #2a2f36;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+        }
+
+        .search-box i {
+            color: #9ca3af;
+            margin-right: 10px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: #e5e7eb;
+            width: 100%;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search-box input::placeholder {
+            color: #6b7280;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            background: #2a2f36;
+            color: #e5e7eb;
+            border: 1px solid #3a3f48;
+            padding: 0.5rem 2rem 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            background: #2a2f36;
+            padding: 0.3rem;
+            border-radius: 8px;
+        }
+
+        .view-btn {
+            background: transparent;
+            border: none;
+            color: #9ca3af;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn.active {
+            background: #c5a47a;
+            color: #0a0c0f;
+        }
+
+        /* Documents Grid View */
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .doc-card {
+            background: #1a1e24;
+            border-radius: 12px;
+            border: 1px solid #2a2f36;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .doc-card:hover {
+            transform: translateY(-5px);
+            border-color: #c5a47a;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .doc-type-badge {
+            background: #2a2f36;
+            color: #c5a47a;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .doc-icon-large {
+            width: 50px;
+            height: 50px;
+            background: #2a2f36;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .doc-icon-large i {
+            font-size: 2rem;
+            color: #c5a47a;
+        }
+
+        .doc-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .doc-meta {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .doc-meta i {
+            margin-right: 5px;
+            color: #c5a47a;
+        }
+
+        .doc-stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem 0;
+            border-top: 1px solid #2a2f36;
+            border-bottom: 1px solid #2a2f36;
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bias-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .bias-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .bias-dot.high { background: #ef4444; }
+        .bias-dot.medium { background: #f59e0b; }
+        .bias-dot.low { background: #10b981; }
+
+        /* Documents List View */
+        .documents-list {
+            background: #1a1e24;
+            border-radius: 12px;
+            border: 1px solid #2a2f36;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .list-header {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1.5fr 1fr 1fr 0.5fr;
+            padding: 1rem;
+            background: #2a2f36;
+            color: #9ca3af;
+            font-weight: 500;
+            border-bottom: 1px solid #3a3f48;
+        }
+
+        .list-item {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1.5fr 1fr 1fr 0.5fr;
+            padding: 1rem;
+            border-bottom: 1px solid #2a2f36;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .list-item:hover {
+            background: #2a2f36;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .doc-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .doc-icon {
+            width: 35px;
+            height: 35px;
+            background: #2a2f36;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .doc-icon i {
+            color: #c5a47a;
+        }
+
+        .doc-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .doc-name {
+            font-weight: 500;
+        }
+
+        .doc-id {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .type-badge {
+            background: #2a2f36;
+            color: #c5a47a;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+
+        .bias-score {
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .bias-score.high {
+            background: #ef444420;
+            color: #ef4444;
+        }
+
+        .bias-score.medium {
+            background: #f59e0b20;
+            color: #f59e0b;
+        }
+
+        .bias-score.low {
+            background: #10b98120;
+            color: #10b981;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: 1px solid #2a2f36;
+            color: #9ca3af;
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            border-color: #c5a47a;
+            color: #c5a47a;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .page-btn {
+            background: #1a1e24;
+            border: 1px solid #2a2f36;
+            color: #9ca3af;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover, .page-btn.active {
+            background: #c5a47a;
+            color: #0a0c0f;
+            border-color: #c5a47a;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #9ca3af;
+        }
+
+        .loading i {
+            font-size: 2rem;
+            color: #c5a47a;
+            margin-bottom: 1rem;
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            background: #1a1e24;
+            border-radius: 12px;
+            border: 1px solid #2a2f36;
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            color: #c5a47a;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 1024px) {
+            .list-header {
+                display: none;
+            }
+            
+            .list-item {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .filter-bar {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-scale-balanced"></i>
+                <span>LexAI</span>
+            </div>
+            <div class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+                <a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="/documents" class="active"><i class="fas fa-file-alt"></i> Documents</a>
+                <a href="/analytics"><i class="fas fa-chart-pie"></i> Analytics</a>
+                <a href="/help"><i class="fas fa-question-circle"></i> Help</a>
+            </div>
+            <div class="user-menu">
+                <i class="fas fa-user-circle"></i>
+                <span>Legal AI User</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Document Library</h1>
+            <div class="header-actions">
+                <a href="/upload" class="btn-primary">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    Upload New Document
+                </a>
+            </div>
+        </div>
+
+        <!-- Search and Filter Bar -->
+        <div class="filter-bar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search documents by title or content..." value="{{ search }}">
+            </div>
+            <div class="filter-group">
+                <select class="filter-select" id="typeFilter">
+                    <option value="all" {% if current_type == 'all' %}selected{% endif %}>All Types</option>
+                    <option value="Contract" {% if current_type == 'Contract' %}selected{% endif %}>Contracts</option>
+                    <option value="Judgment" {% if current_type == 'Judgment' %}selected{% endif %}>Court Judgments</option>
+                    <option value="Case Law" {% if current_type == 'Case Law' %}selected{% endif %}>Case Law</option>
+                </select>
+                <select class="filter-select" id="sortFilter">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="title">Title A-Z</option>
+                    <option value="bias">Bias Score (High to Low)</option>
+                </select>
+            </div>
+            <div class="view-toggle">
+                <button class="view-btn active" onclick="setView('grid')" id="gridViewBtn">
+                    <i class="fas fa-grid-2"></i>
+                </button>
+                <button class="view-btn" onclick="setView('list')" id="listViewBtn">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Documents Grid View (Default) -->
+        <div id="gridView" class="documents-grid">
+            {% for doc in documents %}
+            <div class="doc-card" onclick="viewDocument({{ doc['doc_id'] }})">
+                <div class="card-header">
+                    <span class="doc-type-badge">{{ doc['doc_type'] }}</span>
+                    <div class="doc-icon-large">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                </div>
+                <div class="doc-title">{{ doc['title'] }}</div>
+                <div class="doc-meta">
+                    <i class="fas fa-calendar"></i> {{ doc['uploaded_at'] }}
+                </div>
+                <div class="doc-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">{{ loop.index }}</div>
+                        <div class="stat-label">Pages</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ loop.index * 1000 }}</div>
+                        <div class="stat-label">Words</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ range(1, 100) | random / 100 }}</div>
+                        <div class="stat-label">Bias</div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="bias-indicator">
+                        <span class="bias-dot {% if loop.index % 3 == 0 %}high{% elif loop.index % 3 == 1 %}medium{% else %}low{% endif %}"></span>
+                        <span>Bias Score</span>
+                    </div>
+                    <button class="action-btn" onclick="event.stopPropagation(); viewDocument({{ doc['doc_id'] }})">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                </div>
+            </div>
+            {% else %}
+            <div class="no-results" style="grid-column: 1/-1;">
+                <i class="fas fa-file-alt"></i>
+                <h3>No Documents Found</h3>
+                <p>Upload your first document to get started with AI analysis</p>
+                <a href="/upload" class="btn-primary" style="display: inline-block; margin-top: 1rem;">
+                    <i class="fas fa-cloud-upload-alt"></i> Upload Document
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Documents List View (Hidden by default) -->
+        <div id="listView" class="documents-list" style="display: none;">
+            <div class="list-header">
+                <div>Document</div>
+                <div>Type</div>
+                <div>Uploaded</div>
+                <div>Bias Score</div>
+                <div>Status</div>
+                <div>Actions</div>
+            </div>
+            {% for doc in documents %}
+            <div class="list-item" onclick="viewDocument({{ doc['doc_id'] }})">
+                <div class="doc-info">
+                    <div class="doc-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="doc-details">
+                        <span class="doc-name">{{ doc['title'] }}</span>
+                        <span class="doc-id">ID: DOC-{{ doc['doc_id'] }}</span>
+                    </div>
+                </div>
+                <div>
+                    <span class="type-badge">{{ doc['doc_type'] }}</span>
+                </div>
+                <div>{{ doc['uploaded_at'] }}</div>
+                <div>
+                    <span class="bias-score {% if loop.index % 3 == 0 %}high{% elif loop.index % 3 == 1 %}medium{% else %}low{% endif %}">
+                        {{ range(1, 100) | random / 100 }}
+                    </span>
+                </div>
+                <div>
+                    <span class="type-badge" style="background: #10b98120; color: #10b981;">
+                        <i class="fas fa-check-circle"></i> Completed
+                    </span>
+                </div>
+                <div>
+                    <button class="action-btn" onclick="event.stopPropagation(); viewDocument({{ doc['doc_id'] }})">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            {% else %}
+            <div style="padding: 3rem; text-align: center;">
+                <i class="fas fa-file-alt" style="font-size: 3rem; color: #c5a47a; opacity: 0.5; margin-bottom: 1rem;"></i>
+                <h3>No Documents Found</h3>
+                <p>Upload your first document to get started</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if documents|length > 0 %}
+        <div class="pagination">
+            <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+            <button class="page-btn">5</button>
+            <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        let currentView = 'grid';
+
+        function setView(view) {
+            currentView = view;
+            const gridView = document.getElementById('gridView');
+            const listView = document.getElementById('listView');
+            const gridBtn = document.getElementById('gridViewBtn');
+            const listBtn = document.getElementById('listViewBtn');
+
+            if (view === 'grid') {
+                gridView.style.display = 'grid';
+                listView.style.display = 'none';
+                gridBtn.classList.add('active');
+                listBtn.classList.remove('active');
+            } else {
+                gridView.style.display = 'none';
+                listView.style.display = 'block';
+                listBtn.classList.add('active');
+                gridBtn.classList.remove('active');
+            }
+        }
+
+        function viewDocument(docId) {
+            window.location.href = '/document/' + docId;
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                const search = this.value;
+                const type = document.getElementById('typeFilter').value;
+                window.location.href = `/documents?type=${type}&search=${search}`;
+            }
+        });
+
+        // Filter change
+        document.getElementById('typeFilter').addEventListener('change', function() {
+            const type = this.value;
+            const search = document.getElementById('searchInput').value;
+            window.location.href = `/documents?type=${type}&search=${search}`;
+        });
+
+        // Sort change
+        document.getElementById('sortFilter').addEventListener('change', function() {
+            // In a real app, this would trigger a re-sort
+            console.log('Sort by:', this.value);
+        });
+    </script>
+</body>
+</html>

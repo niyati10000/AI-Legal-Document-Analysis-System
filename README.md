@@ -77,34 +77,9 @@ LexAI utilizes a robust fallback architecture to ensure continuous operation:
 * Git
 * *(Optional)* Google Gemini API key for advanced insights
 
-### Step-by-Step Installation
-
-```bash
-# 1. Clone the repository
-git clone [https://github.com/niyati10000/LexAI.git](https://github.com/niyati10000/LexAI.git)
-cd LexAI
-
-# 2. Create a virtual environment
-python -m venv .venv
-
-# 3. Activate the virtual environment
-# On Windows:
-.venv\Scripts\activate
-# On Mac/Linux:
-source .venv/bin/activate
-
-# 4. Install dependencies
-pip install -r requirements.txt
-
-# 5. Initialize the database
-python database.py
-
-# 6. Run the application
-python app.py
-
 Navigate to http://127.0.0.1:5000 in your web browser to view the application.
 
-**⚙️ Configuration**
+** Configuration**
 
 Create a .env file in the root directory to store your environment variables:
 
@@ -168,3 +143,30 @@ Niyati Bansal  Indore, Madhya Pradesh, India
  X/Twitter: @bansalniyati1
 
 Special thanks to the Hugging Face community, Google GenAI, and the Flask community for powering this platform.
+
+
+### Step-by-Step Installation
+
+```bash
+# 1. Clone the repository
+git clone [https://github.com/niyati10000/LexAI.git](https://github.com/niyati10000/LexAI.git)
+cd LexAI
+
+# 2. Create a virtual environment
+python -m venv .venv
+
+# 3. Activate the virtual environment
+# On Windows:
+.venv\Scripts\activate
+# On Mac/Linux:
+source .venv/bin/activate
+
+# 4. Install dependencies
+pip install -r requirements.txt
+
+# 5. Initialize the database
+python database.py
+
+# 6. Run the application
+python app.py
+

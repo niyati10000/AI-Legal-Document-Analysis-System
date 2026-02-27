@@ -138,6 +138,12 @@ Niyati Bansal  Indore, Madhya Pradesh, India
 
 Special thanks to the Hugging Face community, Google GenAI, and the Flask community for powering this platform.
 
+### video reference
+
+
+https://github.com/user-attachments/assets/08357445-8468-4fb4-a2e5-9b9c4629e353
+
+
 
 ### Step-by-Step Installation
 

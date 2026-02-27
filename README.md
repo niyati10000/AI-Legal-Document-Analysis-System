@@ -83,33 +83,27 @@ Navigate to http://127.0.0.1:5000 in your web browser to view the application.
 
 Create a .env file in the root directory to store your environment variables:
 
-# Flask Configuration (Required)
+### Flask Configuration (Required)
 SECRET_KEY=your-secure-secret-key-here
 
-# Google Gemini API (Optional, but recommended for full feature access)
+### Google Gemini API (Optional, but recommended for full feature access)
 GEMINI_API_KEY=your-gemini-api-key
 
-** Demo Credentials**
+### Demo Credentials
 Want to test the platform quickly? Use the built-in demo account:
-
 Email: demo@lexai.com
-
 Password: demo123
 
-** Usage & API Integration**
+### Usage & API Integration
 LexAI includes a robust RESTful API for integrating analysis into external legal software.
-
 Example: Fetching Advanced Analytics
 
 curl -X GET [http://127.0.0.1:5000/api/analytics-data](http://127.0.0.1:5000/api/analytics-data) \
      -H "Content-Type: application/json"
 
-** Contributing**
-
+### Contributing
 Contributions are welcome! If you'd like to improve LexAI, please follow these standard PR guidelines:
-
 Fork the repository.
-
 Create a new branch for your feature (git checkout -b feature/AmazingFeature).
 
 Commit your changes (git commit -m 'Add some AmazingFeature').
@@ -118,7 +112,7 @@ Push to the branch (git push origin feature/AmazingFeature).
 
 Open a Pull Request.
 
-** Business Value**
+### Business Value
 
 85% Time Saved on routine document review.
 
@@ -128,10 +122,10 @@ Open a Pull Request.
 
 Reduced Legal Risk through proactive historical bias identification.
 
-**📝 License**
+### License
 This project is currently for educational and demonstration purposes. For specific licensing inquiries or production usage, please contact the developer.
 
-** Developer Info**
+### Developer Info
 Niyati Bansal  Indore, Madhya Pradesh, India
 
  Email: Niyatibansal626@gmail.com

@@ -1,27 +1,1145 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Upload Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Document - LexAI Legal Intelligence</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; margin: 40px; }
-        .form-box { max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
-        input, select, textarea { width: 100%; margin-bottom: 15px; padding: 8px; }
-        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0c0f 0%, #1a1e24 100%);
+            color: #e5e7eb;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1e24;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c5a47a;
+            border-radius: 4px;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(10, 12, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #2a2f36;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #c5a47a;
+        }
+
+        .logo span {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c5a47a, #e4c9a7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #c5a47a;
+        }
+
+        .nav-links a i {
+            font-size: 1.1rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem 1rem;
+            background: #1a1e24;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid #2a2f36;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 5% 50px;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #c5a47a, #e4c9a7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-header p {
+            color: #9ca3af;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* AI Model Badge */
+        .hybrid-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #c5a47a20, #b08f6720);
+            border: 1px solid #c5a47a;
+            border-radius: 30px;
+            padding: 0.5rem 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .hybrid-badge i {
+            color: #c5a47a;
+            font-size: 1.2rem;
+        }
+
+        .hybrid-badge span {
+            color: #c5a47a;
+            font-weight: 500;
+        }
+
+        .hybrid-badge .badge {
+            background: #c5a47a;
+            color: #0a0c0f;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Upload Container */
+        .upload-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Drag & Drop Area */
+        .drop-area {
+            background: #1a1e24;
+            border: 2px dashed #2a2f36;
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .drop-area:hover, .drop-area.highlight {
+            border-color: #c5a47a;
+            background: #2a2f36;
+        }
+
+        .drop-area i {
+            font-size: 4rem;
+            color: #c5a47a;
+            margin-bottom: 1rem;
+        }
+
+        .drop-area h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .drop-area p {
+            color: #9ca3af;
+            margin-bottom: 1rem;
+        }
+
+        .file-types {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .file-type-badge {
+            background: #2a2f36;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #c5a47a;
+        }
+
+        .file-type-badge i {
+            font-size: 0.9rem;
+            margin-right: 5px;
+        }
+
+        .browse-btn {
+            background: #c5a47a;
+            color: #0a0c0f;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .browse-btn:hover {
+            background: #b08f67;
+            transform: translateY(-2px);
+        }
+
+        /* File Input (Hidden) */
+        #fileInput {
+            display: none;
+        }
+
+        /* Upload Form */
+        .upload-form {
+            background: #1a1e24;
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid #2a2f36;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #c5a47a;
+            font-weight: 500;
+        }
+
+        .form-group label i {
+            margin-right: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: #2a2f36;
+            border: 1px solid #3a3f48;
+            border-radius: 8px;
+            color: #e5e7eb;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #c5a47a;
+            box-shadow: 0 0 0 2px rgba(197, 164, 122, 0.2);
+        }
+
+        .form-control::placeholder {
+            color: #6b7280;
+        }
+
+        select.form-control {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Analysis Options */
+        .analysis-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .option-card {
+            background: #2a2f36;
+            border: 1px solid #3a3f48;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-card:hover {
+            border-color: #c5a47a;
+            transform: translateY(-2px);
+        }
+
+        .option-card.selected {
+            background: #c5a47a;
+            border-color: #c5a47a;
+        }
+
+        .option-card.selected i,
+        .option-card.selected h4,
+        .option-card.selected p {
+            color: #0a0c0f;
+        }
+
+        .option-card i {
+            font-size: 2rem;
+            color: #c5a47a;
+            margin-bottom: 0.5rem;
+        }
+
+        .option-card h4 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .option-card p {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        /* Model Info */
+        .model-info {
+            background: #2a2f36;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 3px solid #c5a47a;
+        }
+
+        .model-info h4 {
+            color: #c5a47a;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .model-tags {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .model-tag {
+            background: #1a1e24;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .model-tag i {
+            color: #10b981;
+            font-size: 0.8rem;
+        }
+
+        /* Privacy Settings */
+        .privacy-settings {
+            background: #2a2f36;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .privacy-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .privacy-toggle:last-child {
+            margin-bottom: 0;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #3a3f48;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: #9ca3af;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #c5a47a;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+            background-color: #0a0c0f;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #c5a47a, #b08f67);
+            color: #0a0c0f;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(197, 164, 122, 0.2);
+        }
+
+        .submit-btn i {
+            font-size: 1.2rem;
+        }
+
+        /* File Preview */
+        .file-preview {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #2a2f36;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .file-preview.active {
+            display: block;
+        }
+
+        .preview-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .preview-icon {
+            width: 40px;
+            height: 40px;
+            background: #c5a47a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-icon i {
+            font-size: 1.5rem;
+            color: #0a0c0f;
+        }
+
+        .preview-info {
+            flex: 1;
+        }
+
+        .preview-name {
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+        }
+
+        .preview-size {
+            font-size: 0.85rem;
+            color: #9ca3af;
+        }
+
+        .preview-progress {
+            height: 4px;
+            background: #3a3f48;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #c5a47a;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .remove-file {
+            color: #ef4444;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Guidelines */
+        .guidelines {
+            background: #1a1e24;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #2a2f36;
+        }
+
+        .guidelines h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #c5a47a;
+        }
+
+        .guidelines ul {
+            list-style: none;
+        }
+
+        .guidelines li {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #9ca3af;
+        }
+
+        .guidelines li i {
+            color: #c5a47a;
+            width: 20px;
+        }
+
+        /* Success Message */
+        .success-message {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+        }
+
+        .success-message.show {
+            transform: translateX(0);
+        }
+
+        /* Error Message */
+        .error-message {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: #ef4444;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+        }
+
+        .error-message.show {
+            transform: translateX(0);
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 12, 15, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            flex-direction: column;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-content {
+            text-align: center;
+            max-width: 400px;
+            padding: 2rem;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #2a2f36;
+            border-top-color: #c5a47a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+
+        .loading-progress {
+            width: 100%;
+            height: 4px;
+            background: #2a2f36;
+            border-radius: 2px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .loading-progress-bar {
+            height: 100%;
+            background: #c5a47a;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .loading-status {
+            color: #c5a47a;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .loading-detail {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 1024px) {
+            .upload-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .analysis-options {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="form-box">
-        <h2>Document Ingestion</h2>
-        <form method="POST">
-            <input type="text" name="title" placeholder="Document Title" required>
-            <select name="doc_type">
-                <option value="Contract">Contract</option>
-                <option value="Judgment">Court Judgment</option>
-                <option value="Case Law">Case Law</option>
-            </select>
-            <textarea name="content" rows="10" placeholder="Paste legal text here..." required></textarea>
-            <button type="submit">Start Analysis</button>
-        </form>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-scale-balanced"></i>
+                <span>LexAI</span>
+            </div>
+            <div class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+                <a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="/documents"><i class="fas fa-file-alt"></i> Documents</a>
+                <a href="/analytics"><i class="fas fa-chart-pie"></i> Analytics</a>
+                <a href="/help"><i class="fas fa-question-circle"></i> Help</a>
+            </div>
+            <div class="user-menu">
+                <i class="fas fa-user-circle"></i>
+                <span id="username">Legal AI User</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Upload Legal Document</h1>
+            <p>Upload contracts, court judgments, or case law for hybrid AI-powered analysis</p>
+        </div>
+
+        <!-- Hybrid AI Badge -->
+        <div style="display: flex; justify-content: center;">
+            <div class="hybrid-badge">
+                <i class="fas fa-microchip"></i>
+                <span>Hybrid AI Architecture</span>
+                <span class="badge">BERT + Gemini</span>
+            </div>
+        </div>
+
+        <!-- Upload Container -->
+        <div class="upload-container">
+            <!-- Drag & Drop Area -->
+            <div class="drop-area" id="dropArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Drag & Drop Your Document</h3>
+                <p>or click to browse files</p>
+                <div class="file-types">
+                    <span class="file-type-badge"><i class="fas fa-file-pdf"></i> PDF</span>
+                    <span class="file-type-badge"><i class="fas fa-file-word"></i> DOCX</span>
+                    <span class="file-type-badge"><i class="fas fa-file-alt"></i> TXT</span>
+                </div>
+                <button class="browse-btn" type="button" onclick="document.getElementById('fileInput').click()">
+                    <i class="fas fa-folder-open"></i> Browse Files
+                </button>
+                <input type="file" id="fileInput" accept=".pdf,.docx,.txt" onchange="handleFileSelect(this.files)">
+                
+                <!-- File Preview -->
+                <div class="file-preview" id="filePreview">
+                    <div class="preview-header">
+                        <div class="preview-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="preview-info">
+                            <div class="preview-name" id="fileName">document.pdf</div>
+                            <div class="preview-size" id="fileSize">2.5 MB</div>
+                        </div>
+                        <div class="remove-file" onclick="removeFile(event)">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    </div>
+                    <div class="preview-progress">
+                        <div class="progress-bar" id="progressBar" style="width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Form -->
+            <form class="upload-form" method="POST" action="/upload" enctype="multipart/form-data" id="uploadForm">
+                <div class="form-group">
+                    <label><i class="fas fa-heading"></i> Document Title</label>
+                    <input type="text" class="form-control" name="title" id="title" placeholder="e.g., Employment Contract 2024" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-tag"></i> Document Type</label>
+                    <select class="form-control" name="doc_type" id="docType" required>
+                        <option value="">Select document type</option>
+                        <option value="Contract">📄 Contract</option>
+                        <option value="Judgment">⚖️ Court Judgment</option>
+                        <option value="Case Law">📚 Case Law</option>
+                        <option value="Statute">📜 Statute</option>
+                        <option value="Agreement">🤝 Agreement</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-align-left"></i> Document Content</label>
+                    <textarea class="form-control" name="content" id="content" placeholder="Paste or type legal text here..." required></textarea>
+                </div>
+
+                <!-- Model Info -->
+                <div class="model-info">
+                    <h4><i class="fas fa-robot"></i> Hybrid AI Processing</h4>
+                    <div class="model-tags">
+                        <span class="model-tag"><i class="fas fa-check-circle"></i> BERT: Entity Extraction</span>
+                        <span class="model-tag"><i class="fas fa-check-circle"></i> BART: Summarization</span>
+                        <span class="model-tag"><i class="fas fa-check-circle"></i> Gemini: Insights</span>
+                        <span class="model-tag"><i class="fas fa-check-circle"></i> RoBERTa: Bias Detection</span>
+                    </div>
+                </div>
+
+                <!-- Analysis Options -->
+                <label><i class="fas fa-microchip"></i> Analysis Type</label>
+                <div class="analysis-options">
+                    <div class="option-card" onclick="selectOption(this, 'summarize')">
+                        <i class="fas fa-file-lines"></i>
+                        <h4>Summarize Only</h4>
+                        <p>Generate concise summary</p>
+                    </div>
+                    <div class="option-card" onclick="selectOption(this, 'bias')">
+                        <i class="fas fa-scale-balanced"></i>
+                        <h4>Bias Detection</h4>
+                        <p>Analyze for biases</p>
+                    </div>
+                    <div class="option-card selected" onclick="selectOption(this, 'both')">
+                        <i class="fas fa-robot"></i>
+                        <h4>Both (Recommended)</h4>
+                        <p>Full AI analysis</p>
+                    </div>
+                </div>
+                <input type="hidden" name="analysis_type" id="analysisType" value="both">
+
+                <!-- Privacy Settings -->
+                <div class="privacy-settings">
+                    <div class="privacy-toggle">
+                        <span><i class="fas fa-user-secret"></i> PII Masking</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" name="pii_masking" id="piiMasking" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="privacy-toggle">
+                        <span><i class="fas fa-lock"></i> Encrypt Document</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" name="encrypt" id="encrypt">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="privacy-toggle">
+                        <span><i class="fas fa-history"></i> Store Analysis History</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" name="store_history" id="storeHistory" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <i class="fas fa-robot"></i>
+                    Start Hybrid AI Analysis
+                </button>
+            </form>
+        </div>
+
+        <!-- Guidelines -->
+        <div class="guidelines">
+            <h3><i class="fas fa-info-circle"></i> Document Guidelines</h3>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Maximum file size: 50 MB</li>
+                <li><i class="fas fa-check-circle"></i> Supported formats: PDF, DOCX, TXT</li>
+                <li><i class="fas fa-check-circle"></i> For scanned documents, OCR will be automatically applied</li>
+                <li><i class="fas fa-check-circle"></i> PII (Personally Identifiable Information) will be masked for privacy</li>
+                <li><i class="fas fa-check-circle"></i> Analysis uses hybrid AI: BERT + Gemini + RoBERTa</li>
+                <li><i class="fas fa-check-circle"></i> Typical processing time: 45-90 seconds</li>
+            </ul>
+        </div>
     </div>
+
+    <!-- Success Message -->
+    <div class="success-message" id="successMessage">
+        <i class="fas fa-check-circle"></i>
+        <span id="successText">Document uploaded successfully! Redirecting to analysis...</span>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message" id="errorMessage">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="errorText">Upload failed. Please try again.</span>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3 id="loadingTitle">Processing Document</h3>
+            <p class="loading-status" id="loadingStatus">Initializing hybrid AI models...</p>
+            <div class="loading-progress">
+                <div class="loading-progress-bar" id="loadingProgress" style="width: 0%;"></div>
+            </div>
+            <p class="loading-detail" id="loadingDetail">BERT • Gemini • RoBERTa</p>
+        </div>
+    </div>
+
+    <script>
+        // Drag & Drop functionality
+        const dropArea = document.getElementById('dropArea');
+        const fileInput = document.getElementById('fileInput');
+        const filePreview = document.getElementById('filePreview');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const uploadForm = document.getElementById('uploadForm');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingStatus = document.getElementById('loadingStatus');
+        const loadingProgress = document.getElementById('loadingProgress');
+        const loadingTitle = document.getElementById('loadingTitle');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const successText = document.getElementById('successText');
+        const errorText = document.getElementById('errorText');
+
+        let selectedFile = null;
+
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        // Highlight drop area on drag over
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        // Handle dropped files
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        function highlight() {
+            dropArea.classList.add('highlight');
+        }
+
+        function unhighlight() {
+            dropArea.classList.remove('highlight');
+        }
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        function handleFileSelect(files) {
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                selectedFile = files[0];
+                displayFilePreview(selectedFile);
+                
+                // Auto-fill title from filename
+                const titleInput = document.getElementById('title');
+                if (!titleInput.value) {
+                    titleInput.value = selectedFile.name.replace(/\.[^/.]+$/, "");
+                }
+            }
+        }
+
+        function displayFilePreview(file) {
+            const preview = filePreview;
+            preview.classList.add('active');
+            fileName.textContent = file.name;
+            
+            // Format file size
+            const size = file.size;
+            if (size < 1024) {
+                fileSize.textContent = size + ' B';
+            } else if (size < 1024 * 1024) {
+                fileSize.textContent = (size / 1024).toFixed(1) + ' KB';
+            } else {
+                fileSize.textContent = (size / (1024 * 1024)).toFixed(1) + ' MB';
+            }
+
+            // Set icon based on file type
+            const icon = preview.querySelector('.preview-icon i');
+            if (file.name.endsWith('.pdf')) {
+                icon.className = 'fas fa-file-pdf';
+            } else if (file.name.endsWith('.docx')) {
+                icon.className = 'fas fa-file-word';
+            } else {
+                icon.className = 'fas fa-file-alt';
+            }
+        }
+
+        function removeFile(e) {
+            e.stopPropagation();
+            filePreview.classList.remove('active');
+            fileInput.value = '';
+            selectedFile = null;
+        }
+
+        // Analysis options
+        function selectOption(element, value) {
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            document.getElementById('analysisType').value = value;
+        }
+
+        // Form submission - FIXED VERSION
+        uploadForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Validate form
+            const title = document.getElementById('title').value;
+            const docType = document.getElementById('docType').value;
+            const content = document.getElementById('content').value;
+            
+            if (!title || !docType || !content) {
+                showError('Please fill in all required fields');
+                return;
+            }
+            
+            // Show loading overlay
+            loadingOverlay.classList.add('show');
+            loadingStatus.textContent = 'Uploading document...';
+            loadingProgress.style.width = '10%';
+            
+            try {
+                // Create form data
+                const formData = new FormData();
+                formData.append('title', title);
+                formData.append('doc_type', docType);
+                formData.append('content', content);
+                formData.append('analysis_type', document.getElementById('analysisType').value);
+                
+                if (selectedFile) {
+                    formData.append('file', selectedFile);
+                }
+                
+                loadingStatus.textContent = 'Processing with hybrid AI...';
+                loadingProgress.style.width = '30%';
+                
+                // Send to server
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.redirected) {
+                    loadingProgress.style.width = '100%';
+                    loadingStatus.textContent = 'Analysis complete!';
+                    
+                    setTimeout(() => {
+                        loadingOverlay.classList.remove('show');
+                        showSuccess('Document analyzed successfully!');
+                        
+                        // Redirect to the page the server sent
+                        window.location.href = response.url;
+                    }, 1000);
+                } else {
+                    const result = await response.json();
+                    if (response.ok) {
+                        loadingProgress.style.width = '100%';
+                        loadingStatus.textContent = 'Analysis complete!';
+                        
+                        setTimeout(() => {
+                            loadingOverlay.classList.remove('show');
+                            showSuccess('Document analyzed successfully!');
+                            
+                            // Redirect to analysis page
+                            setTimeout(() => {
+                                window.location.href = `/analysis/${result.doc_id}`;
+                            }, 1500);
+                        }, 1000);
+                    } else {
+                        throw new Error(result.error || 'Upload failed');
+                    }
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                loadingOverlay.classList.remove('show');
+                showError('Upload failed. Please try again.');
+            }
+        });
+
+        function showSuccess(message) {
+            successText.textContent = message;
+            successMessage.classList.add('show');
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.classList.add('show');
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        // Auto-resize textarea
+        const textarea = document.getElementById('content');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    </script>
 </body>
 </html>

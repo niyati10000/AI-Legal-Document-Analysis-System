@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - LexAI Legal Intelligence</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0c0f;
+            color: #e5e7eb;
+            line-height: 1.6;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1e24;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c5a47a;
+            border-radius: 4px;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(10, 12, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #2a2f36;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #c5a47a;
+        }
+
+        .logo span {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c5a47a, #e4c9a7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #c5a47a;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem 1rem;
+            background: #1a1e24;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid #2a2f36;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 5% 50px;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c5a47a, #e4c9a7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .page-header p {
+            color: #9ca3af;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #1a1e24;
+            border: 1px solid #2a2f36;
+            border-radius: 50px;
+            padding: 0.3rem 0.3rem 0.3rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: #c5a47a;
+            box-shadow: 0 0 0 3px rgba(197, 164, 122, 0.2);
+        }
+
+        .search-box i {
+            color: #9ca3af;
+        }
+
+        .search-box input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 1rem;
+            color: #e5e7eb;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search-box button {
+            background: #c5a47a;
+            border: none;
+            color: #0a0c0f;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-box button:hover {
+            background: #b08f67;
+        }
+
+        /* Help Grid */
+        .help-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .help-card {
+            background: #1a1e24;
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid #2a2f36;
+            transition: all 0.3s ease;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .help-card:hover {
+            transform: translateY(-5px);
+            border-color: #c5a47a;
+        }
+
+        .help-icon {
+            width: 70px;
+            height: 70px;
+            background: #2a2f36;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .help-icon i {
+            font-size: 2rem;
+            color: #c5a47a;
+        }
+
+        .help-card h3 {
+            margin-bottom: 1rem;
+        }
+
+        .help-card p {
+            color: #9ca3af;
+            margin-bottom: 1.5rem;
+        }
+
+        .help-link {
+            color: #c5a47a;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            background: #1a1e24;
+            border-radius: 12px;
+            border: 1px solid #2a2f36;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            color: #c5a47a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #2a2f36;
+            padding-bottom: 1.5rem;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-question h4 {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .faq-question h4 i {
+            color: #c5a47a;
+            font-size: 0.9rem;
+        }
+
+        .faq-question i {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            color: #9ca3af;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            margin-top: 1rem;
+        }
+
+        /* Quick Start Guide */
+        .guide-section {
+            background: #1a1e24;
+            border-radius: 12px;
+            border: 1px solid #2a2f36;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .guide-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step:not(:last-child)::after {
+            content: '→';
+            position: absolute;
+            right: -1.5rem;
+            top: 2rem;
+            color: #c5a47a;
+            font-size: 1.5rem;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: #c5a47a;
+            color: #0a0c0f;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+        }
+
+        .step h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        .step p {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        /* Documentation Links */
+        .docs-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .doc-category {
+            background: #1a1e24;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #2a2f36;
+        }
+
+        .doc-category h3 {
+            color: #c5a47a;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .doc-links {
+            list-style: none;
+        }
+
+        .doc-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .doc-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .doc-links a:hover {
+            color: #c5a47a;
+        }
+
+        .doc-links a i {
+            font-size: 0.8rem;
+        }
+
+        /* Contact Support */
+        .contact-section {
+            background: linear-gradient(135deg, #1a1e24, #2a2f36);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            border: 1px solid #c5a47a;
+        }
+
+        .contact-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #c5a47a;
+        }
+
+        .contact-section p {
+            color: #9ca3af;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .contact-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .contact-btn {
+            background: transparent;
+            border: 1px solid #c5a47a;
+            color: #c5a47a;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-btn:hover {
+            background: #c5a47a;
+            color: #0a0c0f;
+        }
+
+        .contact-btn.primary {
+            background: #c5a47a;
+            color: #0a0c0f;
+        }
+
+        .contact-btn.primary:hover {
+            background: #b08f67;
+        }
+
+        /* System Status */
+        .status-bar {
+            background: #1a1e24;
+            border-radius: 8px;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #2a2f36;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .status-dot.online {
+            background: #10b981;
+            box-shadow: 0 0 10px #10b981;
+        }
+
+        .status-dot.offline {
+            background: #ef4444;
+        }
+
+        .status-dot.maintenance {
+            background: #f59e0b;
+        }
+
+        @media (max-width: 1024px) {
+            .help-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .guide-steps {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .step:not(:last-child)::after {
+                display: none;
+            }
+            
+            .docs-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .help-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .guide-steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .docs-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-scale-balanced"></i>
+                <span>LexAI</span>
+            </div>
+            <div class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+                <a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="/documents"><i class="fas fa-file-alt"></i> Documents</a>
+                <a href="/analytics"><i class="fas fa-chart-pie"></i> Analytics</a>
+                <a href="/help" class="active"><i class="fas fa-question-circle"></i> Help</a>
+            </div>
+            <div class="user-menu">
+                <i class="fas fa-user-circle"></i>
+                <span>Legal AI User</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>How can we help you?</h1>
+            <p>Search our documentation, browse guides, or contact support</p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search for help articles, guides, FAQs...">
+                <button>Search</button>
+            </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-dot online"></span>
+                <span>API Status: Operational</span>
+            </div>
+            <div class="status-item">
+                <span class="status-dot online"></span>
+                <span>AI Models: Online</span>
+            </div>
+            <div class="status-item">
+                <span class="status-dot online"></span>
+                <span>Database: Healthy</span>
+            </div>
+            <div class="status-item">
+                <span class="status-dot online"></span>
+                <span>Last updated: 2 minutes ago</span>
+            </div>
+        </div>
+
+        <!-- Help Categories -->
+        <div class="help-grid">
+            <div class="help-card" onclick="window.location.href='#getting-started'">
+                <div class="help-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h3>Getting Started</h3>
+                <p>New to LexAI? Learn the basics and set up your first document analysis</p>
+                <span class="help-link">Learn more <i class="fas fa-arrow-right"></i></span>
+            </div>
+            <div class="help-card" onclick="window.location.href='#guides'">
+                <div class="help-icon">
+                    <i class="fas fa-file-lines"></i>
+                </div>
+                <h3>Guides & Tutorials</h3>
+                <p>Deep dive into specific features like bias detection and summarization</p>
+                <span class="help-link">View guides <i class="fas fa-arrow-right"></i></span>
+            </div>
+            <div class="help-card" onclick="window.location.href='#faq'">
+                <div class="help-icon">
+                    <i class="fas fa-question"></i>
+                </div>
+                <h3>FAQ</h3>
+                <p>Find answers to commonly asked questions about the platform</p>
+                <span class="help-link">Browse FAQ <i class="fas fa-arrow-right"></i></span>
+            </div>
+            <div class="help-card" onclick="window.location.href='#api'">
+                <div class="help-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3>API Documentation</h3>
+                <p>Integrate LexAI with your existing legal tech stack</p>
+                <span class="help-link">API docs <i class="fas fa-arrow-right"></i></span>
+            </div>
+            <div class="help-card" onclick="window.location.href='#security'">
+                <div class="help-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Security & Compliance</h3>
+                <p>Learn about our security measures and compliance standards</p>
+                <span class="help-link">View details <i class="fas fa-arrow-right"></i></span>
+            </div>
+            <div class="help-card" onclick="window.location.href='#billing'">
+                <div class="help-icon">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <h3>Billing & Plans</h3>
+                <p>Information about pricing, plans, and payment methods</p>
+                <span class="help-link">Learn more <i class="fas fa-arrow-right"></i></span>
+            </div>
+        </div>
+
+        <!-- Quick Start Guide -->
+        <div class="guide-section" id="getting-started">
+            <h2 class="section-title">
+                <i class="fas fa-rocket"></i>
+                Quick Start Guide
+            </h2>
+            <p style="color: #9ca3af; margin-bottom: 2rem;">Get started with LexAI in four simple steps</p>
+            
+            <div class="guide-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h4>Upload Document</h4>
+                    <p>Upload PDF, DOCX, or TXT files up to 50MB</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h4>Select Analysis Type</h4>
+                    <p>Choose summarization, bias detection, or both</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h4>AI Processing</h4>
+                    <p>Our AI models analyze your document (30-60 seconds)</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h4>Review Results</h4>
+                    <p>Get summary, bias score, and extracted entities</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section" id="faq">
+            <h2 class="section-title">
+                <i class="fas fa-question-circle"></i>
+                Frequently Asked Questions
+            </h2>
+            
+            <div class="faq-grid">
+                <div class="faq-item active">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h4><i class="fas fa-gavel"></i> What document types are supported?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>LexAI supports PDF, DOCX, and TXT files up to 50MB. For scanned documents, our OCR technology automatically extracts text for analysis.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h4><i class="fas fa-scale-balanced"></i> How does bias detection work?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our AI models analyze language patterns, terminology, and historical legal data to identify potential gender, racial, or socioeconomic biases in legal texts.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h4><i class="fas fa-lock"></i> Is my data secure?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, all documents are encrypted at rest and in transit. PII is automatically masked, and we are compliant with GDPR, HIPAA, and SOC2 standards.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h4><i class="fas fa-clock"></i> How long does analysis take?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Average processing time is 30-60 seconds per document, depending on length and complexity. You'll receive a notification when analysis is complete.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h4><i class="fas fa-language"></i> Which languages are supported?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Currently, we support English, Spanish, French, and German legal documents. More languages are coming soon.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h4><i class="fas fa-robot"></i> How accurate is the AI?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our models achieve 98.3% accuracy on legal document analysis, with continuous improvement through regular training on new legal datasets.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documentation Links -->
+        <div class="docs-section" id="guides">
+            <div class="doc-category">
+                <h3><i class="fas fa-file-lines"></i> Document Analysis</h3>
+                <ul class="doc-links">
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Uploading documents</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Understanding summaries</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Bias score interpretation</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Entity extraction guide</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Batch processing</a></li>
+                </ul>
+            </div>
+            
+            <div class="doc-category">
+                <h3><i class="fas fa-code"></i> API Reference</h3>
+                <ul class="doc-links">
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Authentication</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Endpoints overview</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Rate limits</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Webhooks</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> SDKs & libraries</a></li>
+                </ul>
+            </div>
+            
+            <div class="doc-category">
+                <h3><i class="fas fa-shield-alt"></i> Security & Compliance</h3>
+                <ul class="doc-links">
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Data encryption</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> PII masking</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> GDPR compliance</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> HIPAA considerations</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Audit logs</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Video Tutorials Section -->
+        <div class="guide-section" style="margin-bottom: 3rem;">
+            <h2 class="section-title">
+                <i class="fas fa-play-circle"></i>
+                Video Tutorials
+            </h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 2rem;">
+                <div style="background: #2a2f36; border-radius: 8px; overflow: hidden;">
+                    <div style="height: 150px; background: #1a1e24; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; color: #c5a47a;"></i>
+                    </div>
+                    <div style="padding: 1rem;">
+                        <h4>Getting Started with LexAI</h4>
+                        <p style="color: #9ca3af;">3:45 min</p>
+                    </div>
+                </div>
+                <div style="background: #2a2f36; border-radius: 8px; overflow: hidden;">
+                    <div style="height: 150px; background: #1a1e24; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; color: #c5a47a;"></i>
+                    </div>
+                    <div style="padding: 1rem;">
+                        <h4>Understanding Bias Detection</h4>
+                        <p style="color: #9ca3af;">5:20 min</p>
+                    </div>
+                </div>
+                <div style="background: #2a2f36; border-radius: 8px; overflow: hidden;">
+                    <div style="height: 150px; background: #1a1e24; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; color: #c5a47a;"></i>
+                    </div>
+                    <div style="padding: 1rem;">
+                        <h4>API Integration Guide</h4>
+                        <p style="color: #9ca3af;">7:15 min</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Support -->
+        <div class="contact-section">
+            <h2>Still need help?</h2>
+            <p>Our support team is available 24/7 to assist you with any questions or issues</p>
+            <div class="contact-buttons">
+                <a href="#" class="contact-btn primary">
+                    <i class="fas fa-headset"></i>
+                    Live Chat
+                </a>
+                <a href="#" class="contact-btn">
+                    <i class="fas fa-envelope"></i>
+                    Email Support
+                </a>
+                <a href="#" class="contact-btn">
+                    <i class="fas fa-phone"></i>
+                    Schedule Call
+                </a>
+            </div>
+            <p style="margin-top: 2rem; color: #9ca3af;">
+                <i class="fas fa-clock"></i> Average response time: &lt; 2 hours
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function toggleFaq(element) {
+            const faqItem = element.closest('.faq-item');
+            faqItem.classList.toggle('active');
+        }
+
+        // Search functionality (simulated)
+        document.querySelector('.search-box button').addEventListener('click', function() {
+            const searchTerm = document.querySelector('.search-box input').value;
+            if (searchTerm) {
+                alert(`Searching for: ${searchTerm}\nIn production, this would show relevant help articles.`);
+            }
+        });
+
+        // FAQ search highlight
+        document.querySelector('.search-box input').addEventListener('keyup', function(e) {
+            const searchTerm = this.value.toLowerCase();
+            
+            if (searchTerm.length > 2) {
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    const question = item.querySelector('h4').textContent.toLowerCase();
+                    if (question.includes(searchTerm)) {
+                        item.style.background = '#2a2f36';
+                        item.style.padding = '0.5rem';
+                        item.style.borderRadius = '4px';
+                    } else {
+                        item.style.background = '';
+                        item.style.padding = '';
+                    }
+                });
+            } else {
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.style.background = '';
+                    item.style.padding = '';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

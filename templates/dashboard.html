@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - LexAI Legal Intelligence</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0c0f;
+            color: #e5e7eb;
+            line-height: 1.6;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1e24;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c5a47a;
+            border-radius: 4px;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(10, 12, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #2a2f36;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #c5a47a;
+        }
+
+        .logo span {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c5a47a, #e4c9a7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #c5a47a;
+        }
+
+        .nav-links a i {
+            font-size: 1.1rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem 1rem;
+            background: #1a1e24;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid #2a2f36;
+        }
+
+        .user-menu i {
+            color: #c5a47a;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 5% 50px;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .date-range {
+            background: #1a1e24;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #2a2f36;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #1a1e24;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #2a2f36;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: #c5a47a;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-header i {
+            font-size: 2rem;
+            color: #c5a47a;
+            opacity: 0.8;
+        }
+
+        .stat-title {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+        }
+
+        .stat-change.positive {
+            color: #10b981;
+        }
+
+        .stat-change.negative {
+            color: #ef4444;
+        }
+
+        /* Charts Row */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: #1a1e24;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #2a2f36;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .chart-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        /* Recent Activity */
+        .recent-activity {
+            background: #1a1e24;
+            border-radius: 12px;
+            border: 1px solid #2a2f36;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-header h3 {
+            font-size: 1.2rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid #2a2f36;
+            color: #9ca3af;
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #c5a47a;
+            color: #0a0c0f;
+            border-color: #c5a47a;
+        }
+
+        .activity-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .activity-table th {
+            text-align: left;
+            padding: 1rem;
+            color: #9ca3af;
+            font-weight: 500;
+            border-bottom: 2px solid #2a2f36;
+        }
+
+        .activity-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #2a2f36;
+        }
+
+        .doc-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .doc-icon {
+            width: 40px;
+            height: 40px;
+            background: #2a2f36;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .doc-icon i {
+            color: #c5a47a;
+        }
+
+        .doc-title {
+            font-weight: 500;
+        }
+
+        .doc-meta {
+            font-size: 0.85rem;
+            color: #9ca3af;
+        }
+
+        .bias-score {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .bias-score.high {
+            background: #ef444420;
+            color: #ef4444;
+        }
+
+        .bias-score.medium {
+            background: #f59e0b20;
+            color: #f59e0b;
+        }
+
+        .bias-score.low {
+            background: #10b98120;
+            color: #10b981;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .status-badge.completed {
+            background: #10b98120;
+            color: #10b981;
+        }
+
+        .status-badge.processing {
+            background: #f59e0b20;
+            color: #f59e0b;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: 1px solid #2a2f36;
+            color: #9ca3af;
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            border-color: #c5a47a;
+            color: #c5a47a;
+        }
+
+        /* Bias Distribution */
+        .bias-distribution {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .bias-card {
+            background: #1a1e24;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #2a2f36;
+        }
+
+        .bias-list {
+            margin-top: 1rem;
+        }
+
+        .bias-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #2a2f36;
+        }
+
+        .bias-item:last-child {
+            border-bottom: none;
+        }
+
+        .bias-type {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bias-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        .bias-value {
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100px;
+            height: 6px;
+            background: #2a2f36;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #c5a47a;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .bias-distribution {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-scale-balanced"></i>
+                <span>LexAI</span>
+            </div>
+            <div class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+                <a href="/dashboard" class="active"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="/documents"><i class="fas fa-file-alt"></i> Documents</a>
+                <a href="/analytics"><i class="fas fa-chart-pie"></i> Analytics</a>
+                <a href="/help"><i class="fas fa-question-circle"></i> Help</a>
+                <a href="/upload" style="background: #c5a47a; color: #0a0c0f; padding: 0.6rem 1.5rem; border-radius: 8px;">
+                    <i class="fas fa-cloud-upload-alt"></i> Upload
+                </a>
+            </div>
+            <div class="user-menu">
+                <i class="fas fa-user-circle"></i>
+                <span>Legal AI User</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Dashboard Overview</h1>
+            <div class="date-range">
+                <i class="fas fa-calendar"></i>
+                <span>Last 30 Days</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Total Documents</span>
+                    <i class="fas fa-file-contract"></i>
+                </div>
+                <div class="stat-value">{{ total_docs }}</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>12% from last month</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Summaries Generated</span>
+                    <i class="fas fa-file-lines"></i>
+                </div>
+                <div class="stat-value">{{ total_summaries }}</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>8% from last month</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Bias Reports</span>
+                    <i class="fas fa-scale-balanced"></i>
+                </div>
+                <div class="stat-value">{{ total_bias_reports }}</div>
+                <div class="stat-change negative">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>3% from last month</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Avg. Processing Time</span>
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-value">2.4s</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>15% faster</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="charts-row">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Document Processing Trend</h3>
+                    <select style="background: #2a2f36; color: #fff; border: none; padding: 0.3rem; border-radius: 4px;">
+                        <option>Weekly</option>
+                        <option>Monthly</option>
+                        <option>Yearly</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Bias Detection Distribution</h3>
+                    <select style="background: #2a2f36; color: #fff; border: none; padding: 0.3rem; border-radius: 4px;">
+                        <option>By Type</option>
+                        <option>By Score</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <canvas id="biasChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="recent-activity">
+            <div class="activity-header">
+                <h3>Recent Document Analysis</h3>
+                <div class="filter-buttons">
+                    <button class="filter-btn active">All</button>
+                    <button class="filter-btn">Contracts</button>
+                    <button class="filter-btn">Judgments</button>
+                    <button class="filter-btn">Case Law</button>
+                </div>
+            </div>
+            <table class="activity-table">
+                <thead>
+                    <tr>
+                        <th>Document</th>
+                        <th>Type</th>
+                        <th>Upload Date</th>
+                        <th>Bias Score</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doc in recent_docs %}
+                    <tr>
+                        <td>
+                            <div class="doc-info">
+                                <div class="doc-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div>
+                                    <div class="doc-title">{{ doc['title'] }}</div>
+                                    <div class="doc-meta">ID: DOC-{{ doc['doc_id'] }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ doc['doc_type'] }}</td>
+                        <td>{{ doc['uploaded_at'] }}</td>
+                        <td>
+                            {% if doc['bias_score'] %}
+                                {% if doc['bias_score'] > 0.7 %}
+                                    <span class="bias-score high">{{ "%.2f"|format(doc['bias_score']) }}</span>
+                                {% elif doc['bias_score'] > 0.4 %}
+                                    <span class="bias-score medium">{{ "%.2f"|format(doc['bias_score']) }}</span>
+                                {% else %}
+                                    <span class="bias-score low">{{ "%.2f"|format(doc['bias_score']) }}</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="bias-score low">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if doc['summary_text'] %}
+                                <span class="status-badge completed">Completed</span>
+                            {% else %}
+                                <span class="status-badge processing">Processing</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="action-btn" onclick="viewDocument({{ doc['doc_id'] }})">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Bias Distribution -->
+        <div class="bias-distribution">
+            <div class="bias-card">
+                <h3>Bias Type Distribution</h3>
+                <div class="bias-list">
+                    {% for stat in bias_stats %}
+                    <div class="bias-item">
+                        <div class="bias-type">
+                            <div class="bias-color" style="background: {% if stat['bias_type'] == 'Gender' %}#ef4444{% elif stat['bias_type'] == 'Racial' %}#f59e0b{% else %}#10b981{% endif %}"></div>
+                            <span>{{ stat['bias_type'] or 'None' }}</span>
+                        </div>
+                        <div class="bias-value">{{ stat['count'] }}</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {{ (stat['count'] / total_bias_reports * 100) if total_bias_reports > 0 else 0 }}%"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="bias-card">
+                <h3>Average Bias Scores</h3>
+                <div class="bias-list">
+                    {% for stat in bias_stats %}
+                    <div class="bias-item">
+                        <div class="bias-type">
+                            <div class="bias-color" style="background: {% if stat['bias_type'] == 'Gender' %}#ef4444{% elif stat['bias_type'] == 'Racial' %}#f59e0b{% else %}#10b981{% endif %}"></div>
+                            <span>{{ stat['bias_type'] or 'None' }}</span>
+                        </div>
+                        <div class="bias-value">{{ "%.2f"|format(stat['avg_score'] or 0) }}</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {{ (stat['avg_score'] or 0) * 100 }}%"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Trend Chart
+        const trendCtx = document.getElementById('trendChart').getContext('2d');
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Documents Processed',
+                    data: [12, 19, 15, 24],
+                    borderColor: '#c5a47a',
+                    backgroundColor: 'rgba(197, 164, 122, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#9ca3af' }
+                    }
+                },
+                scales: {
+                    y: {
+                        grid: { color: '#2a2f36' },
+                        ticks: { color: '#9ca3af' }
+                    },
+                    x: {
+                        grid: { color: '#2a2f36' },
+                        ticks: { color: '#9ca3af' }
+                    }
+                }
+            }
+        });
+
+        // Bias Chart
+        const biasCtx = document.getElementById('biasChart').getContext('2d');
+        new Chart(biasCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Gender Bias', 'Racial Bias', 'Socioeconomic', 'No Bias'],
+                datasets: [{
+                    data: [30, 25, 15, 30],
+                    backgroundColor: ['#ef4444', '#f59e0b', '#10b981', '#6b7280'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#9ca3af' }
+                    }
+                }
+            }
+        });
+
+        function viewDocument(docId) {
+            window.location.href = '/document/' + docId;
+        }
+    </script>
+</body>
+</html>

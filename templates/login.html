@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - LexAI Legal Intelligence</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0c0f 0%, #1a1e24 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: #1a1e24;
+            border-radius: 16px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #2a2f36;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .logo i {
+            font-size: 3rem;
+            color: #c5a47a;
+        }
+        .logo h1 {
+            font-family: 'Playfair Display', serif;
+            color: #c5a47a;
+            margin-top: 1rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            color: #c5a47a;
+            margin-bottom: 0.5rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: #2a2f36;
+            border: 1px solid #3a3f48;
+            border-radius: 8px;
+            color: #e5e7eb;
+        }
+        .btn-login {
+            width: 100%;
+            padding: 1rem;
+            background: #c5a47a;
+            color: #0a0c0f;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-login:hover {
+            background: #b08f67;
+        }
+        .flash-message {
+            background: #ef444420;
+            color: #ef4444;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #ef4444;
+        }
+        .demo-credentials {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #2a2f36;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .demo-credentials p {
+            color: #9ca3af;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <i class="fas fa-scale-balanced"></i>
+            <h1>LexAI</h1>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message">
+                        <i class="fas fa-exclamation-circle"></i> {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST">
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" name="email" class="form-control" value="demo@lexai.com" required>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <input type="password" name="password" class="form-control" value="demo123" required>
+            </div>
+            <button type="submit" class="btn-login">Login to LexAI</button>
+        </form>
+        
+        <div class="demo-credentials">
+            <p><i class="fas fa-info-circle"></i> Demo Credentials</p>
+            <p style="color: #c5a47a;">Email: demo@lexai.com</p>
+            <p style="color: #c5a47a;">Password: demo123</p>
+        </div>
+    </div>
+</body>
+</html>

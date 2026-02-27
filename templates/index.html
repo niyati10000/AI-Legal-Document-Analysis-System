@@ -1,41 +1,831 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Legal AI Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LexAI - Legal Intelligence Platform</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 40px; background: #f8f9fa; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; border: 1px solid #dee2e6; text-align: left; }
-        th { background-color: #004085; color: white; }
-        .btn { display: inline-block; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 4px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0c0f;
+            color: #e5e7eb;
+            line-height: 1.6;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1e24;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c5a47a;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #b08f67;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(10, 12, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #2a2f36;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 2.2rem;
+            color: #c5a47a;
+        }
+
+        .logo span {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c5a47a, #e4c9a7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a:hover {
+            color: #c5a47a;
+        }
+
+        .nav-links a i {
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #c5a47a, #b08f67);
+            color: #0a0c0f !important;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600 !important;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #b08f67, #9a7b54);
+            color: #0a0c0f !important;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 5% 50px;
+        }
+
+        /* Hero Section with Video */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            padding: 4rem 0;
+            position: relative;
+        }
+
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-content h1 span {
+            color: #c5a47a;
+            border-bottom: 3px solid #c5a47a;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: #9ca3af;
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #c5a47a;
+            padding: 0.8rem 2rem;
+            border: 2px solid #c5a47a;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #c5a47a;
+            color: #0a0c0f;
+        }
+
+        /* Video Container */
+        .hero-video-container {
+            position: relative;
+            width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 1px solid #2a2f36;
+            aspect-ratio: 16/9;
+        }
+
+        .hero-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(10,12,15,0.7) 0%, rgba(197,164,122,0.2) 100%);
+            pointer-events: none;
+        }
+
+        .floating-card {
+            position: absolute;
+            bottom: -20px;
+            left: -20px;
+            background: #1a1e24;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid #c5a47a;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .floating-card i {
+            font-size: 2rem;
+            color: #c5a47a;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            z-index: 10;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .video-control-btn {
+            background: rgba(26, 30, 36, 0.8);
+            border: 1px solid #c5a47a;
+            color: #c5a47a;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .video-control-btn:hover {
+            background: #c5a47a;
+            color: #0a0c0f;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .stat-card {
+            background: #1a1e24;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid #2a2f36;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: #c5a47a;
+        }
+
+        .stat-card i {
+            font-size: 2.5rem;
+            color: #c5a47a;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: #9ca3af;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: #1a1e24;
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid #2a2f36;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: #c5a47a;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #c5a47a20, #b08f6720);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-icon i {
+            font-size: 2rem;
+            color: #c5a47a;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #9ca3af;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-link {
+            color: #c5a47a;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Recent Documents */
+        .recent-docs {
+            background: #1a1e24;
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid #2a2f36;
+            margin: 4rem 0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h3 {
+            font-size: 1.5rem;
+        }
+
+        .view-all {
+            color: #c5a47a;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .documents-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .documents-table th {
+            text-align: left;
+            padding: 1rem;
+            color: #9ca3af;
+            font-weight: 500;
+            border-bottom: 2px solid #2a2f36;
+        }
+
+        .documents-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #2a2f36;
+        }
+
+        .doc-type {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .doc-type i {
+            color: #c5a47a;
+        }
+
+        .status-badge {
+            background: #2a2f36;
+            color: #c5a47a;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .status-badge.completed {
+            background: #10b98120;
+            color: #10b981;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: 1px solid #2a2f36;
+            color: #9ca3af;
+            padding: 0.4rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            border-color: #c5a47a;
+            color: #c5a47a;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a1e24;
+            padding: 3rem 5%;
+            margin-top: 4rem;
+            border-top: 1px solid #2a2f36;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .footer-column h4 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 1.5rem;
+            color: #c5a47a;
+        }
+
+        .footer-column a {
+            color: #9ca3af;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.8rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: #c5a47a;
+        }
+
+        .footer-column p {
+            color: #9ca3af;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-column p i {
+            color: #c5a47a;
+            width: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: #2a2f36;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: #c5a47a;
+            transform: translateY(-3px);
+        }
+
+        .social-links a:hover i {
+            color: #0a0c0f;
+        }
+
+        .social-links a i {
+            color: #c5a47a;
+            transition: all 0.3s ease;
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 2rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid #2a2f36;
+            text-align: center;
+            color: #9ca3af;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .stats-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Legal AI Analysis Dashboard</h1>
-        <p>Summarization & Bias Detection Module</p>
-        <a href="/upload" class="btn">+ Upload New Document</a>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Type</th>
-                    <th>Date Uploaded</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for doc in documents %}
-                <tr>
-                    <td>{{ doc['doc_id'] }}</td>
-                    <td>{{ doc['title'] }}</td>
-                    <td>{{ doc['doc_type'] }}</td>
-                    <td>{{ doc['uploaded_at'] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-scale-balanced"></i>
+                <span>LexAI</span>
+            </div>
+            <div class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+                <a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="/documents"><i class="fas fa-file-alt"></i> Documents</a>
+                <a href="/analytics"><i class="fas fa-chart-pie"></i> Analytics</a>
+                <a href="/help"><i class="fas fa-question-circle"></i> Help</a>
+                <a href="/upload" class="btn-primary"><i class="fas fa-cloud-upload-alt"></i> Upload</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Hero Section with Video - Option A: Legal Office Video -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Intelligent Legal <span>Document Analysis</span> with AI</h1>
+                <p>Automate the review, summarization, and bias detection of complex legal texts. Enhance equity and efficiency in legal document processing.</p>
+                <div class="hero-buttons">
+                    <a href="/upload" class="btn-primary"><i class="fas fa-cloud-upload-alt"></i> Upload Document</a>
+                    <a href="/demo" class="btn-secondary"><i class="fas fa-play"></i> View Demo</a>
+                </div>
+            </div>
+            <div class="hero-video-container">
+                <!-- Option A: Legal Office Video (Professional) -->
+                <video class="hero-video" autoplay muted loop playsinline id="heroVideo">
+                    <source src="https://videos.pexels.com/video-files/6583601/6583601-uhd_2560_1440_25fps.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-overlay"></div>
+                <div class="floating-card">
+                    <i class="fas fa-robot"></i>
+                    <div>
+                        <strong>AI Analysis Complete</strong>
+                        <p>Bias detection: 98% accuracy</p>
+                    </div>
+                </div>
+                <div class="video-controls">
+                    <button class="video-control-btn" onclick="toggleMute()" id="muteBtn">
+                        <i class="fas fa-volume-mute"></i>
+                    </button>
+                    <button class="video-control-btn" onclick="togglePlay()" id="playBtn">
+                        <i class="fas fa-pause"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stat-card">
+                <i class="fas fa-file-contract"></i>
+                <h3>1,247</h3>
+                <p>Documents Processed</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-robot"></i>
+                <h3>98%</h3>
+                <p>Analysis Accuracy</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-scale-balanced"></i>
+                <h3>342</h3>
+                <p>Bias Reports Generated</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-clock"></i>
+                <h3>85%</h3>
+                <p>Time Saved</p>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="section-title">
+                <h2>Powerful Legal AI Features</h2>
+                <p>Advanced NLP and machine learning algorithms designed specifically for legal document analysis</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <h3>Automated Summarization</h3>
+                    <p>Rapid distillation of lengthy contracts into actionable insights using transformer models</p>
+                    <a href="#" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-scale-balanced"></i>
+                    </div>
+                    <h3>Bias Detection</h3>
+                    <p>Algorithmic identification of systemic or gender-based patterns in judicial outcomes</p>
+                    <a href="#" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    <h3>Entity Extraction</h3>
+                    <p>Structured retrieval of key entities using BERT for rapid indexing and search</p>
+                    <a href="#" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Documents -->
+        <section class="recent-docs">
+            <div class="section-header">
+                <h3>Recent Documents</h3>
+                <a href="/documents" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <table class="documents-table">
+                <thead>
+                    <tr>
+                        <th>Document Title</th>
+                        <th>Type</th>
+                        <th>Upload Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doc in documents %}
+                    <tr>
+                        <td>
+                            <div class="doc-type">
+                                <i class="fas fa-file-pdf"></i>
+                                {{ doc['title'] }}
+                            </div>
+                        </td>
+                        <td>{{ doc['doc_type'] }}</td>
+                        <td>{{ doc['uploaded_at'] }}</td>
+                        <td><span class="status-badge completed">Completed</span></td>
+                        <td>
+                            <button class="action-btn" onclick="viewDocument({{ doc['doc_id'] }})">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <!-- CTA Section -->
+        <section style="text-align: center; padding: 4rem 0;">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Ready to Transform Your Legal Workflow?</h2>
+            <p style="color: #9ca3af; margin-bottom: 2rem;">Start analyzing your legal documents with AI-powered insights today</p>
+            <a href="/upload" class="btn-primary" style="font-size: 1.2rem; padding: 1rem 3rem;">
+                <i class="fas fa-cloud-upload-alt"></i> Upload Your First Document
+            </a>
+        </section>
     </div>
+
+    <!-- Footer with Your Personal Information -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>LexAI</h4>
+                <p style="color: #9ca3af; margin-bottom: 1rem;">Intelligent legal document analysis platform powered by advanced AI.</p>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/niyati-bansal-6a783b284/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://x.com/bansalniyati1?s=21" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://github.com/niyati10000" target="_blank"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4>Product</h4>
+                <a href="#">Features</a>
+                <a href="#">Pricing</a>
+                <a href="#">API</a>
+                <a href="#">Documentation</a>
+            </div>
+            <div class="footer-column">
+                <h4>Resources</h4>
+                <a href="#">Blog</a>
+                <a href="#">Case Studies</a>
+                <a href="#">Support</a>
+                <a href="#">Legal</a>
+            </div>
+            <div class="footer-column">
+                <h4>Contact</h4>
+                <p><i class="fas fa-envelope"></i> Niyatibansal626@gmail.com</p>
+                <p><i class="fas fa-phone"></i> +91 9876543210</p>
+                <p><i class="fas fa-map-marker-alt"></i> India</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Niyati Bansal. All rights reserved. Powered by Advanced Legal AI.</p>
+        </div>
+    </footer>
+
+    <script>
+        function viewDocument(docId) {
+            window.location.href = '/document/' + docId;
+        }
+
+        // Video controls
+        const video = document.getElementById('heroVideo');
+        const muteBtn = document.getElementById('muteBtn');
+        const playBtn = document.getElementById('playBtn');
+
+        function toggleMute() {
+            video.muted = !video.muted;
+            muteBtn.innerHTML = video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+        }
+
+        function togglePlay() {
+            if (video.paused) {
+                video.play();
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            } else {
+                video.pause();
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        }
+
+        // Optional: Add different video sources for different screen sizes
+        function updateVideoSource() {
+            const video = document.getElementById('heroVideo');
+            const source = video.querySelector('source');
+            
+            if (window.innerWidth <= 768) {
+                // Mobile version - lower quality for faster loading
+                source.src = "https://videos.pexels.com/video-files/6583601/6583601-sd_360_640_25fps.mp4";
+            } else {
+                // Desktop version - high quality
+                source.src = "https://videos.pexels.com/video-files/6583601/6583601-uhd_2560_1440_25fps.mp4";
+            }
+            video.load();
+        }
+
+        // Uncomment if you want responsive video quality
+        // window.addEventListener('resize', updateVideoSource);
+        // updateVideoSource();
+    </script>
 </body>
 </html>

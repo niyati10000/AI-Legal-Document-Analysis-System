@@ -14,7 +14,7 @@ import random
 
 # ===== CREATE FLASK APP FIRST =====
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-here-change-in-production'
+app.secret_key = os.environ.get('SECRET_KEY', 'fallback-secret-key-for-dev-only')
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'pdf', 'docx', 'txt'}
@@ -37,7 +37,7 @@ HF_AVAILABLE = False
 print("⚠️ Transformers disabled - using fallback AI only")
 
 # ===== GEMINI CONFIGURATION =====
-GEMINI_API_KEY = 'AIzaSyC7w5AkiCxDMOpUR1pDUehazqMLiGbQHtM'  # Your actual key
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
 gemini_client = None
 
 if GEMINI_AVAILABLE and GEMINI_API_KEY:
@@ -1103,4 +1103,6 @@ if __name__ == '__main__':
             os.remove('legal_ai.db')
     
     init_db()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)

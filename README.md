@@ -138,6 +138,11 @@ Niyati Bansal  Indore, Madhya Pradesh, India
 
 Special thanks to the Hugging Face community, Google GenAI, and the Flask community for powering this platform.
 
+
+### Deployed link
+
+https://python-code--niyatibansal626.replit.app/
+
 ### video reference
 
 

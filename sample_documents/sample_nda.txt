@@ -1,0 +1,30 @@
+MUTUAL NON-DISCLOSURE AGREEMENT
+
+This Mutual Non-Disclosure Agreement ("Agreement") is entered into on August 14, 2026 ("Effective Date"), by and between:
+Disclosing Party: Sarah Jenkins (Email: sarah.j@techcorp.com, Phone: 212-555-0199, SSN: 000-12-3456)
+Receiving Party: Michael Vance (Email: m.vance@innovatelabs.org, Phone: 415-555-0245)
+
+1. Purpose
+The parties wish to explore a business relationship of mutual interest. In connection with this, the Disclosing Party may disclose proprietary information.
+
+2. Confidential Information
+Confidential Information refers to any proprietary information, technical data, trade secrets, or know-how, including but not limited to research, product plans, source code, and software, disclosed by the Disclosing Party.
+
+3. Redaction of Personal Data
+The parties agree that any personal identifiers, including social security numbers, banking credit cards (e.g. 4111-2222-3333-4444), and private contact details shall be handled in accordance with GDPR and compliance regulations.
+
+4. Arbitration Clause
+Any dispute arising out of or in connection with this contract shall be determined by arbitration in New York City, before a single arbitrator.
+
+5. Term
+This Agreement and the Receiving Party's duty to hold Confidential Information in confidence shall remain in effect for three (3) years from the Effective Date.
+
+IN WITNESS WHEREOF, the parties have executed this Agreement.
+
+__________________________
+Sarah Jenkins
+Disclosing Party
+
+__________________________
+Michael Vance
+Receiving Party

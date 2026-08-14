@@ -1,172 +1,173 @@
-# ⚖️ LexAI - Legal Intelligence Platform
+# ⚖️ LexAI - Legal Document Intelligence & Bias Analysis Platform
 
-> **AI-Powered Legal Document Analysis for Enhanced Equity and Efficiency**
+> **AI-Powered Contract Review, Bias Auditing, and Legal Risk Intelligence**
 
-[![License](https://img.shields.io/badge/License-Educational-blue.svg)](LICENSE)
-[![Python Version](https://img.shields.io/badge/Python-3.8%2B-brightgreen.svg)](https://python.org)
+[![Python Version](https://img.shields.io/badge/Python-3.13%2B-blue.svg)](https://python.org)
 [![Flask Version](https://img.shields.io/badge/Flask-3.1.2-lightgrey.svg)](https://flask.palletsprojects.com/)
-[![AI Powered](https://img.shields.io/badge/AI-HuggingFace%20%7C%20Gemini-orange.svg)](#)
-[![Status](https://img.shields.io/badge/Status-Active_Development-success.svg)](#)
+[![AI Engine](https://img.shields.io/badge/AI-Google%20Gemini%203.5%20Flash-orange.svg)](https://aistudio.google.com/)
+[![Design System](https://img.shields.io/badge/Design-Apple%20VisionOS%20%26%20Porcelain%20Acrylic-cyan.svg)](#)
+[![Tests](https://img.shields.io/badge/Tests-11%20Passed-brightgreen.svg)](#)
 
-LexAI is a specialized artificial intelligence platform designed to automate the review, summarization, and bias detection of complex legal texts. By leveraging hybrid AI architectures, it empowers legal professionals to process contracts, court judgments, and case law faster while proactively identifying potential gender, racial, or socioeconomic biases hidden within historical legal documents.
-
----
-
-##  The Problem
-Legal professionals face an overwhelming volume of complex documentation. Traditional manual review processes are:
-* **Labor-Intensive:** High human effort is required for routine document parsing.
-* **Time-Consuming:** Significant bottlenecks occur when processing large volumes of case files.
-* **Error-Prone:** Subjective human interpretation can lead to critical legal oversights.
-* **Bias-Blind:** Systemic gender or social biases in historical data are often invisible to human reviewers.
-
-##  The Solution
-LexAI automates critical legal tasks through a multi-layered AI approach:
-* **Automated Summarization:** Rapid distillation of lengthy contracts into actionable insights.
-* **Bias Detection:** Algorithmic identification of systemic, age, or gender-based patterns.
-* **Entity Extraction:** Structured retrieval of key entities for rapid indexing.
+**LexAI** is an artificial intelligence platform designed to automate the analysis, summarization, and bias auditing of complex legal agreements, contracts, court judgments, and policy documents. Built with a **hybrid AI pipeline** (Google Gemini 3.5 Flash + deterministic rule fallback) and wrapped in an **Apple Frosted Porcelain Acrylic UI**, LexAI delivers clause-by-clause legal risk assessments, protected-class discrimination checks (EEOC / Civil Rights), interactive document chatting, and full-spectrum analytics.
 
 ---
 
-##  Key Features
+## 📸 Key Features & Capabilities
 
-### 1. Secure Document Management
-* Upload legal documents (PDF, DOCX, TXT) up to 50MB.
-* Secure storage with automated PII (Personally Identifiable Information) masking.
-* Smart categorization (Contracts, Judgments, Case Law, Statutes, Agreements).
-* Advanced search, filtering, and paginated document libraries.
+### 1. 🤖 Document Intelligence & "Ask LexAI" Chatbot
+* **Structured Clause Synthesis**: Generates explanatory, clause-by-clause summaries categorizing parties, indemnification thresholds, termination conditions, and payment schedules.
+* **Document Chatbot (`Ask LexAI`)**: In-session legal assistant that answers ad-hoc questions against uploaded documents, cites specific clauses, calculates liabilities, and proposes neutral amendments.
+* **Interactive Document Annotator**: Real-time monospace text inspector with color-coded entity chips and clause flags.
 
-### 2. Hybrid AI-Powered Analysis
-LexAI utilizes a robust fallback architecture to ensure continuous operation:
+### 2. 🛡️ Comprehensive Bias & Compliance Auditing
+* **5 Protected-Class Audits**: Scans documents for subtle, overt, or systemic bias across **Gender**, **Racial/Ethnic**, **Age**, **Disability**, and **Socioeconomic** dimensions.
+* **EEOC / Civil Rights Verification**: Gauges compliance against standard anti-discrimination statutes.
+* **Neutral Remediation Engine**: Pinpoints biased contract language, assigns risk severity (Low / Medium / High), and outputs legally sound remediation recommendations.
 
-| Feature | Technology | Description |
-| :--- | :--- | :--- |
-| **Summarization** | BART Transformer | Generates concise summaries (short/medium/detailed). |
-| **Bias Detection** | RoBERTa + Keywords | Identifies gender, racial, socioeconomic, and age bias. |
-| **Entity Extraction** | BERT NER | Extract people, organizations, locations, dates, and currency. |
-| **Insights** | Google Gemini AI | Provides high-level trend analysis and strategic recommendations. |
+### 3. 🔒 Privacy & Automated PII Masking
+* **Confidentiality Pre-Processing**: Automatically detects and masks sensitive Personally Identifiable Information (SSNs, credit card numbers, personal emails, phone numbers, individual names) before transmitting data.
+* **Audit Trail**: Cryptographically logs every document scan, download, and modification with timestamp and IP address.
 
-### 3. Analytics Dashboard
-
-* Real-time KPIs (Total Documents, Avg. Bias Score, Processing Time).
-* Interactive charts (Processing Trends, Bias Distribution, Document Types).
-* Bias detection heatmaps and top-offender tracking.
-
-### 4. Advanced User Management
-* Secure, session-based authentication system.
-* Built-in demo environment for immediate testing.
-* Personalized user profiles and customizable settings.
+### 4. 🎨 Apple VisionOS & macOS Porcelain Design System
+* **Porcelain Acrylic Glassmorphism**: Clean light-mode aesthetic with soft aurora glows, high-contrast typography, and fluid responsive grids.
+* **Interactive Profile & Master-Detail Settings**: Profile management modal, customizable AI models (Gemini 3.5 Flash vs Pro vs Local), legal domain presets, and downloadable CSV audit logs.
+* **REST API & In-Browser Playground**: Integrated developer console to test live API payloads directly within the browser.
 
 ---
 
-##  System Architecture
+## 🛠️ Technology Stack
 
-
-
-* **Frontend:** HTML5, CSS3, JavaScript, Chart.js, Font Awesome.
-* **Backend:** Python 3.x, Flask, Werkzeug.
-* **AI & NLP:** Hugging Face Transformers (BART, BERT, RoBERTa), Google Gemini API.
-* **Database:** SQLite3 (Development ready).
+| Layer | Technologies |
+|---|---|
+| **Backend** | Python 3.13, Flask 3.1.2, Flask-SQLAlchemy (ORM), Werkzeug |
+| **AI / NLP** | Google Gemini 3.5 Flash (`google-genai`), Regex-NER, Keyword Frequency Fallback |
+| **Document Parsers** | `pypdf` (PDF Parsing), `python-docx` (Word Documents), `txt` |
+| **Frontend** | Vanilla HTML5 / ES6 JavaScript, Apple Frosted Porcelain CSS, Chart.js |
+| **Security** | `scrypt` password hashing, `SHA-256` hashed API Tokens, PII sanitization |
+| **Database** | SQLite (Dev) / PostgreSQL compatible (Production) |
 
 ---
 
-##  Installation & Setup
+## 📂 Project Architecture
 
-### Prerequisites
-* Python 3.8+
-* `pip` package manager
-* Git
-* *(Optional)* Google Gemini API key for advanced insights
+```
+Legal_bais/
+├── app.py                      # Flask Server Bootstrapper & DB Seeding
+├── config.py                   # Environment & Database Configuration
+├── database.py                 # SQLAlchemy ORM Models (User, Document, AuditLog)
+├── requirements.txt            # Python Dependencies
+├── .env                        # Gemini API Key & Environment Secrets
+│
+├── blueprints/                 # Modular Route Controllers
+│   ├── auth.py                 # User Login, Registration & Session Handling
+│   ├── dashboard.py            # Dashboard, Library & Analytics Pages
+│   ├── settings.py             # Settings, Profile Modal, API Key Management & CSV Export
+│   └── api.py                  # REST API v1 Endpoints & Chatbot Service
+│
+├── services/                   # Business Logic & Background Workers
+│   ├── ai_service.py           # Gemini 3.5 Flash Analyzer & Fallback Engine
+│   ├── file_service.py         # PDF, DOCX, and TXT Extraction
+│   └── worker.py               # Asynchronous Multi-threaded Queue Worker
+│
+├── static/                     # Assets & Styling
+│   ├── css/theme.css           # Apple Porcelain Acrylic Design System
+│   └── js/                     # Client-side scripts & live polling
+│
+├── templates/                  # Jinja2 Layout Templates
+│   ├── base.html               # Master Acrylic Navigation Layout
+│   ├── dashboard.html          # Bento Analytics Dashboard
+│   ├── analysis.html           # Full Tabbed Report & "Ask LexAI" Chatbot
+│   ├── settings.html           # Master-Detail Settings & REST Playground
+│   ├── documents.html          # Document Library & Filtering
+│   ├── analytics.html          # System KPIs & Bias Distribution Charts
+│   └── upload.html             # Drag-and-Drop / Paste Document Upload
+│
+├── test_documents/             # Comprehensive Test Files
+│   └── full_test_contract.txt  # Multi-category Bias & PII Verification Contract
+└── tests/                      # Automated Pytest Suite (11 Tests)
+```
 
-Navigate to http://127.0.0.1:5000 in your web browser to view the application.
+---
 
-** Configuration**
+## ⚡ Quick Start Guide
 
-Create a .env file in the root directory to store your environment variables:
+### 1. Prerequisites
+* Python 3.10+ (Recommended Python 3.13)
+* `git`
 
-### Flask Configuration (Required)
-SECRET_KEY=your-secure-secret-key-here
-
-### Google Gemini API (Optional, but recommended for full feature access)
-GEMINI_API_KEY=your-gemini-api-key
-
-### Demo Credentials
-Want to test the platform quickly? Use the built-in demo account:
-Email: demo@lexai.com
-Password: demo123
-
-### Usage & API Integration
-LexAI includes a robust RESTful API for integrating analysis into external legal software.
-Example: Fetching Advanced Analytics
-
-curl -X GET [http://127.0.0.1:5000/api/analytics-data](http://127.0.0.1:5000/api/analytics-data) \
-     -H "Content-Type: application/json"
-
-### Contributing
-Contributions are welcome! If you'd like to improve LexAI, please follow these standard PR guidelines:
-Fork the repository.
-Create a new branch for your feature (git checkout -b feature/AmazingFeature).
-
-Commit your changes (git commit -m 'Add some AmazingFeature').
-
-Push to the branch (git push origin feature/AmazingFeature).
-
-Open a Pull Request.
-
-### Business Value
-
-85% Time Saved on routine document review.
-
-98% Accuracy in targeted bias detection.
-
-24/7 Availability for immediate, highly-consistent document analysis.
-
-Reduced Legal Risk through proactive historical bias identification.
-
-### License
-This project is currently for educational and demonstration purposes. For specific licensing inquiries or production usage, please contact the developer.
-
-### Developer Info
-Niyati Bansal  Indore, Madhya Pradesh, India
-
- Email: Niyatibansal626@gmail.com
-
- LinkedIn: niyati-bansal-6a783b284
-
- GitHub: @niyati10000
-
- X/Twitter: @bansalniyati1
-
-Special thanks to the Hugging Face community, Google GenAI, and the Flask community for powering this platform.
-
-### video reference
-
-
-https://github.com/user-attachments/assets/08357445-8468-4fb4-a2e5-9b9c4629e353
-
-
-
-### Step-by-Step Installation
-
+### 2. Installation
 ```bash
-# 1. Clone the repository
-git clone [https://github.com/niyati10000/LexAI.git](https://github.com/niyati10000/LexAI.git)
-cd LexAI
+# Clone the repository
+git clone https://github.com/niyati10000/AI-Legal-Document-Analysis-System.git
+cd AI-Legal-Document-Analysis-System
 
-# 2. Create a virtual environment
+# Create and activate virtual environment
 python -m venv .venv
 
-# 3. Activate the virtual environment
 # On Windows:
 .venv\Scripts\activate
-# On Mac/Linux:
+# On macOS/Linux:
 source .venv/bin/activate
 
-# 4. Install dependencies
+# Install dependencies
 pip install -r requirements.txt
+```
 
-# 5. Initialize the database
-python database.py
+### 3. Configure Environment
+Create a `.env` file in the root directory:
+```ini
+FLASK_ENV=dev
+SECRET_KEY=your-secure-secret-key-here
+GEMINI_API_KEY=your-gemini-api-key-here
+```
 
-# 6. Run the application
+### 4. Run the Application
+```bash
 python app.py
+```
+Open your browser and navigate to: **[http://127.0.0.1:5000](http://127.0.0.1:5000)**
 
+### 5. Default Demo Credentials
+| Field | Value |
+|---|---|
+| **Email** | `demo@lexai.com` |
+| **Password** | `demo123` |
+
+---
+
+## 🧪 Running Automated Tests
+
+Run the full pytest test suite:
+```bash
+pytest -v
+```
+All 11 unit & integration tests verify authentication, API key validation, version diffing, document parsing, and analysis page rendering.
+
+---
+
+## 🌐 REST API Endpoints
+
+### 1. Analyze Document
+`POST /api/v1/analyze` (Multipart Form Data)
+* **Headers**: `Authorization: Bearer <API_KEY>`
+* **Parameters**: `title`, `content` (or `file`), `analysis_type` (`both|summarize|bias`), `summary_length` (`short|medium|detailed`), `pii_masking` (`true|false`).
+
+### 2. Ask LexAI Chatbot
+`POST /api/v1/chat` (JSON)
+* **Payload**:
+```json
+{
+  "doc_id": 1,
+  "message": "What is the non-compete duration in this contract?",
+  "history": []
+}
+```
+
+### 3. Export Audit Trail
+`GET /settings/export-audit-log`
+* Downloads a CSV of all user activity and document actions.
+
+---
+
+## 📄 License
+This project is developed for educational and professional legal technology analysis.

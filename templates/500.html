@@ -1,16 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Server Error - LexAI</title>
-    <style>
-        body { background: #0a0c0f; color: #e5e7eb; font-family: 'Inter', sans-serif; text-align: center; padding: 100px; }
-        h1 { font-size: 4rem; color: #c5a47a; }
-        a { color: #c5a47a; text-decoration: none; }
-    </style>
-</head>
-<body>
-    <h1>500</h1>
-    <p>Internal server error</p>
-    <a href="/">← Return Home</a>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Internal Server Error - LexAI{% endblock %}
+
+{% block content %}
+<div style="display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 200px);">
+    <div class="glass-panel" style="width: 100%; max-width: 480px; text-align: center; padding: 3rem 2rem; border-color: rgba(239, 68, 68, 0.2);">
+        <div style="width: 60px; height: 60px; background: var(--color-error-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; border: 1px solid var(--color-error);">
+            <i class="fas fa-bug" style="font-size: 1.6rem; color: var(--color-error);"></i>
+        </div>
+        <h2 style="font-family: var(--font-heading); font-size: 2rem; margin-bottom: 0.5rem; color: var(--color-error);">500 - Server Error</h2>
+        <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.6;">
+            The server encountered an unexpected error and was unable to complete your request. Our system logs have registered the error.
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <a href="/" class="btn btn-primary">Go Home</a>
+            <a href="/dashboard" class="btn btn-secondary">Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

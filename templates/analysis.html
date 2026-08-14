@@ -1,1113 +1,1068 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Results - LexAI Legal Intelligence</title>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+{% extends "base.html" %}
+
+{% block title %}Audit Analysis - {{ document.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .metric-chip {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #ffffff;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        border-radius: var(--border-radius-lg);
+        padding: 1.1rem 1.3rem;
+        flex: 1;
+        min-width: 180px;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+        transition: var(--transition-smooth);
+    }
+    .metric-chip:hover {
+        background: #ffffff;
+        border-color: rgba(2, 132, 199, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+    }
+    .metric-chip .icon-box {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+    .metric-chip .val {
+        font-size: 1.45rem;
+        font-weight: 800;
+        font-family: var(--font-heading);
+        color: var(--text-primary);
+        line-height: 1.1;
+    }
+    .metric-chip .lbl {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 700;
+        margin-top: 2px;
+    }
+
+    .tab-nav-btn {
+        font-size: 0.92rem;
+        font-weight: 600;
+        padding: 0.75rem 1.3rem;
+        border: none;
+        background: transparent;
+        color: var(--text-secondary);
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: var(--transition-smooth);
+        border-radius: 12px 12px 0 0;
+    }
+    .tab-nav-btn:hover {
+        color: var(--text-primary);
+        background: rgba(15, 23, 42, 0.04);
+    }
+    .tab-nav-btn.active {
+        color: #0f172a !important;
+        border-bottom: 2px solid #0284c7 !important;
+        background: #ffffff;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.02);
+    }
+
+    .provision-card {
+        background: #ffffff;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        border-radius: var(--border-radius-lg);
+        padding: 1.4rem;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+        transition: var(--transition-smooth);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .provision-card:hover {
+        border-color: rgba(2, 132, 199, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    .flag-card {
+        background: #ffffff;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        border-radius: var(--border-radius-lg);
+        padding: 1.6rem;
+        margin-bottom: 1.2rem;
+        border-left: 4px solid var(--color-error);
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+        transition: var(--transition-smooth);
+    }
+    .flag-card.medium-severity {
+        border-left-color: var(--color-warning);
+    }
+    .flag-card.low-severity {
+        border-left-color: var(--color-success);
+    }
+
+    .quote-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 0.9rem 1.2rem;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+        color: #0284c7;
+        margin: 0.8rem 0;
+        line-height: 1.5;
+        font-weight: 600;
+    }
+
+    .remediation-box {
+        background: #ecfdf5;
+        border: 1px dashed #a7f3d0;
+        border-radius: 10px;
+        padding: 0.9rem 1.2rem;
+        font-size: 0.9rem;
+        color: #065f46;
+        line-height: 1.5;
+    }
+
+    .party-card {
+        background: #ffffff;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        border-radius: var(--border-radius-lg);
+        padding: 1.6rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        flex: 1;
+        min-width: 280px;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+    }
+
+    .entity-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0.45rem 0.9rem;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        color: var(--text-primary);
+        transition: var(--transition-smooth);
+    }
+    .entity-chip:hover {
+        background: #ffffff;
+        border-color: #0284c7;
+        box-shadow: 0 2px 8px rgba(2, 132, 199, 0.12);
+        cursor: default;
+    }
+
+    .prompt-chip {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.8rem;
+        border-radius: 16px;
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        color: #0369a1;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+        white-space: nowrap;
+        font-weight: 600;
+    }
+    .prompt-chip:hover {
+        background: #e0f2fe;
+        border-color: #7dd3fc;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.05); opacity: 0.8; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if document.current_status in ['queued', 'extracting', 'analyzing'] %}
+    <!-- Background Processing Loading View -->
+    <div style="display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 200px);">
+        <div class="glass-panel" style="width: 100%; max-width: 520px; text-align: center; padding: 3.5rem 2.5rem; box-shadow: var(--glass-shadow);">
+            <div style="position: relative; width: 90px; height: 90px; margin: 0 auto 2rem;">
+                <div style="position: absolute; width: 100%; height: 100%; border: 4px solid var(--glass-border); border-top-color: var(--accent-gold); border-radius: 50%; animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;"></div>
+                <div style="position: absolute; width: 70%; height: 70%; top: 15%; left: 15%; border: 4px solid var(--glass-border); border-bottom-color: var(--accent-gold); border-radius: 50%; animation: spin 0.8s linear infinite reverse;"></div>
+            </div>
+            
+            <h2 id="statusTitle" style="font-family: var(--font-heading); font-size: 1.8rem; margin-bottom: 0.5rem; text-transform: capitalize;">{{ document.current_status }} Document</h2>
+            <p id="statusDesc" style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 2rem;">Querying AI models and extracting structural contract metadata...</p>
+            
+            <div class="glass-card" style="background: rgba(255,255,255,0.01); border-style: dashed; padding: 1.2rem; text-align: left;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: var(--accent-gold); margin-bottom: 8px;">
+                    <span>ANALYSIS PROGRESS</span>
+                    <span id="progressPct">25%</span>
+                </div>
+                <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;">
+                    <div id="progressBar" style="height: 100%; width: 25%; background: var(--accent-gold); transition: width 0.5s ease;"></div>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap;">
+                <span class="status-badge" style="background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); color: var(--text-muted); font-size: 0.75rem;"><i class="fas fa-check-circle" id="checkExtract" style="color: var(--text-muted);"></i> Text Extraction</span>
+                <span class="status-badge" style="background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); color: var(--text-muted); font-size: 0.75rem;"><i class="fas fa-check-circle" id="checkPII" style="color: var(--text-muted);"></i> PII Redaction</span>
+                <span class="status-badge" style="background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); color: var(--text-muted); font-size: 0.75rem;"><i class="fas fa-check-circle" id="checkAI" style="color: var(--text-muted);"></i> AI Auditing</span>
+            </div>
+        </div>
+    </div>
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #0a0c0f;
-            color: #e5e7eb;
-            line-height: 1.6;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #1a1e24;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #c5a47a;
-            border-radius: 4px;
-        }
-
-        /* Navigation */
-        .navbar {
-            background: rgba(10, 12, 15, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 5%;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid #2a2f36;
-        }
-
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo i {
-            font-size: 2rem;
-            color: #c5a47a;
-        }
-
-        .logo span {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #c5a47a, #e4c9a7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: #9ca3af;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .nav-links a:hover, .nav-links a.active {
-            color: #c5a47a;
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 0.5rem 1rem;
-            background: #1a1e24;
-            border-radius: 8px;
-            cursor: pointer;
-            border: 1px solid #2a2f36;
-        }
-
-        /* Main Content */
-        .main-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 100px 5% 50px;
-        }
-
-        /* Breadcrumb */
-        .breadcrumb {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-            color: #9ca3af;
-            font-size: 0.9rem;
-        }
-
-        .breadcrumb a {
-            color: #9ca3af;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .breadcrumb a:hover {
-            color: #c5a47a;
-        }
-
-        .breadcrumb i {
-            font-size: 0.8rem;
-        }
-
-        /* Document Header */
-        .doc-header {
-            background: #1a1e24;
-            border-radius: 16px;
-            padding: 2rem;
-            border: 1px solid #2a2f36;
-            margin-bottom: 2rem;
-        }
-
-        .doc-title-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1.5rem;
-        }
-
-        .doc-title h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .doc-meta {
-            display: flex;
-            gap: 2rem;
-            color: #9ca3af;
-        }
-
-        .doc-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .doc-meta-item i {
-            color: #c5a47a;
-        }
-
-        .doc-actions {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .action-btn {
-            background: #2a2f36;
-            border: 1px solid #3a3f48;
-            color: #e5e7eb;
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .action-btn:hover {
-            border-color: #c5a47a;
-            color: #c5a47a;
-        }
-
-        .action-btn.primary {
-            background: #c5a47a;
-            color: #0a0c0f;
-            border: none;
-        }
-
-        .action-btn.primary:hover {
-            background: #b08f67;
-        }
-
-        /* Analysis Tabs */
-        .analysis-tabs {
-            display: flex;
-            gap: 1rem;
-            border-bottom: 1px solid #2a2f36;
-            margin-bottom: 2rem;
-        }
-
-        .tab {
-            padding: 1rem 2rem;
-            color: #9ca3af;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-bottom: 2px solid transparent;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .tab:hover {
-            color: #c5a47a;
-        }
-
-        .tab.active {
-            color: #c5a47a;
-            border-bottom-color: #c5a47a;
-        }
-
-        /* Tab Content */
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Summary Section */
-        .summary-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .summary-card {
-            background: #1a1e24;
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid #2a2f36;
-        }
-
-        .summary-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .summary-header h3 {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #c5a47a;
-        }
-
-        .summary-length {
-            background: #2a2f36;
-            padding: 0.3rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-        }
-
-        .summary-text {
-            line-height: 1.8;
-            color: #d1d5db;
-        }
-
-        .key-points {
-            margin-top: 1.5rem;
-        }
-
-        .key-points h4 {
-            color: #c5a47a;
-            margin-bottom: 1rem;
-        }
-
-        .points-list {
-            list-style: none;
-        }
-
-        .points-list li {
-            margin-bottom: 0.8rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        .points-list li i {
-            color: #10b981;
-            margin-top: 3px;
-        }
-
-        /* Bias Section */
-        .bias-section {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .bias-score-card {
-            background: #1a1e24;
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid #2a2f36;
-            text-align: center;
-        }
-
-        .bias-gauge {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 1.5rem;
-            position: relative;
-        }
-
-        .gauge-value {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2.5rem;
-            font-weight: 700;
-        }
-
-        .gauge-label {
-            color: #9ca3af;
-            margin-bottom: 0.5rem;
-        }
-
-        .bias-type-badge {
-            display: inline-block;
-            padding: 0.5rem 1.5rem;
-            border-radius: 30px;
-            font-weight: 600;
-            margin-top: 1rem;
-        }
-
-        .bias-type-badge.high {
-            background: #ef444420;
-            color: #ef4444;
-        }
-
-        .bias-type-badge.medium {
-            background: #f59e0b20;
-            color: #f59e0b;
-        }
-
-        .bias-type-badge.low {
-            background: #10b98120;
-            color: #10b981;
-        }
-
-        .bias-details {
-            background: #1a1e24;
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid #2a2f36;
-        }
-
-        .bias-explanation {
-            line-height: 1.8;
-            margin-bottom: 1.5rem;
-        }
-
-        .bias-categories {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-        }
-
-        .category-item {
-            background: #2a2f36;
-            padding: 1rem;
-            border-radius: 8px;
-        }
-
-        .category-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-        }
-
-        .category-bar {
-            height: 6px;
-            background: #3a3f48;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .category-fill {
-            height: 100%;
-            background: #c5a47a;
-            border-radius: 3px;
-        }
-
-        /* Entity Extraction */
-        .entities-section {
-            background: #1a1e24;
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid #2a2f36;
-        }
-
-        .entities-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .entity-category {
-            background: #2a2f36;
-            border-radius: 8px;
-            padding: 1rem;
-        }
-
-        .entity-category h4 {
-            color: #c5a47a;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .entity-list {
-            list-style: none;
-        }
-
-        .entity-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #3a3f48;
-        }
-
-        .entity-item:last-child {
-            border-bottom: none;
-        }
-
-        .entity-name {
-            font-weight: 500;
-        }
-
-        .entity-count {
-            background: #1a1e24;
-            padding: 0.2rem 0.6rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            color: #c5a47a;
-        }
-
-        /* Original Text */
-        .original-text {
-            background: #1a1e24;
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid #2a2f36;
-        }
-
-        .text-content {
-            background: #2a2f36;
-            padding: 1.5rem;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            white-space: pre-wrap;
-            max-height: 500px;
-            overflow-y: auto;
-        }
-
-        /* Export Options */
-        .export-menu {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: #c5a47a;
-            color: #0a0c0f;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(197, 164, 122, 0.3);
-            transition: all 0.3s ease;
-            z-index: 100;
-        }
-
-        .export-menu:hover {
-            transform: scale(1.1);
-        }
-
-        .export-options {
-            position: absolute;
-            bottom: 80px;
-            right: 0;
-            background: #1a1e24;
-            border: 1px solid #2a2f36;
-            border-radius: 8px;
-            padding: 0.5rem;
-            display: none;
-            min-width: 150px;
-        }
-
-        .export-menu:hover .export-options {
-            display: block;
-        }
-
-        .export-option {
-            padding: 0.8rem 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 4px;
-        }
-
-        .export-option:hover {
-            background: #2a2f36;
-            color: #c5a47a;
-        }
-
-        @media (max-width: 1024px) {
-            .summary-section {
-                grid-template-columns: 1fr;
-            }
-            
-            .bias-section {
-                grid-template-columns: 1fr;
-            }
-            
-            .entities-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .doc-title-section {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .entities-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .bias-categories {
-                grid-template-columns: 1fr;
-            }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
-</head>
-<body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
+{% elif document.current_status == 'failed' %}
+    <!-- Document Analysis Failed Page -->
+    <div style="display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 200px);">
+        <div class="glass-panel" style="width: 100%; max-width: 500px; text-align: center; padding: 3rem 2rem; border-color: rgba(239, 68, 68, 0.2);">
+            <div style="width: 60px; height: 60px; background: var(--color-error-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; border: 1px solid var(--color-error);">
+                <i class="fas fa-exclamation-triangle" style="font-size: 1.6rem; color: var(--color-error);"></i>
+            </div>
+            <h2 style="font-family: var(--font-heading); font-size: 1.8rem; margin-bottom: 0.5rem; color: var(--color-error);">Analysis Failed</h2>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 2rem;">
+                We encountered an error while attempting to extract or process the uploaded document. It might be password-protected or contain unreadable text.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="/upload" class="btn btn-primary">Try Another File</a>
+                <a href="/dashboard" class="btn btn-secondary">Go to Dashboard</a>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <!-- ==================== COMPLETED ANALYSIS VIEW ==================== -->
+    
+    <!-- 1. Header Banner -->
+    <div class="glass-panel" style="margin-bottom: 1.5rem; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.2rem;">
+        <div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                <h1 class="page-title" style="font-size: 1.8rem; margin-bottom: 0;">{{ document.title }}</h1>
+                <span class="status-badge" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--color-success); font-size: 0.75rem;">
+                    <i class="fas fa-check-circle"></i> AI Verified
+                </span>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 0; font-size: 0.9rem;">
+                Classification: <strong style="color: var(--accent-gold);">{{ document.doc_type }}</strong> &bull; Audited on: {{ document.uploaded_at.strftime('%B %d, %Y at %H:%M') }}
+            </p>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button onclick="toggleChat()" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+                <i class="fas fa-comment-dots"></i> Ask LexAI
+            </button>
+            <a href="/document/{{ document.id }}" class="btn btn-secondary" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+                <i class="far fa-file-lines"></i> Version History & Diff
+            </a>
+            <a href="/dashboard" class="btn btn-secondary" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+                <i class="fas fa-arrow-left"></i> Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- 2. Executive Metrics Bento Strip -->
+    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+        <!-- Metric 1: Overall Risk -->
+        <div class="metric-chip">
+            <div class="icon-box" style="background: {% if bias_report and bias_report.bias_score >= 0.5 %}rgba(239, 68, 68, 0.15); color: var(--color-error);{% elif bias_report and bias_report.bias_score >= 0.2 %}rgba(245, 158, 11, 0.15); color: var(--color-warning);{% else %}rgba(16, 185, 129, 0.15); color: var(--color-success);{% endif %}">
                 <i class="fas fa-scale-balanced"></i>
-                <span>LexAI</span>
             </div>
-            <div class="nav-links">
-                <a href="/"><i class="fas fa-home"></i> Home</a>
-                <a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
-                <a href="/documents"><i class="fas fa-file-alt"></i> Documents</a>
-                <a href="/analytics"><i class="fas fa-chart-pie"></i> Analytics</a>
-                <a href="/help"><i class="fas fa-question-circle"></i> Help</a>
-            </div>
-            <div class="user-menu">
-                <i class="fas fa-user-circle"></i>
-                <span>Legal AI User</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Breadcrumb -->
-        <div class="breadcrumb">
-            <a href="/">Home</a>
-            <i class="fas fa-chevron-right"></i>
-            <a href="/documents">Documents</a>
-            <i class="fas fa-chevron-right"></i>
-            <span>Analysis Results</span>
-        </div>
-
-        <!-- Document Header -->
-        <div class="doc-header">
-            <div class="doc-title-section">
-                <div class="doc-title">
-                    <h1>{{ document['title'] if document else 'Employment Contract 2024' }}</h1>
-                    <div class="doc-meta">
-                        <span class="doc-meta-item">
-                            <i class="fas fa-tag"></i>
-                            {{ document['doc_type'] if document else 'Contract' }}
-                        </span>
-                        <span class="doc-meta-item">
-                            <i class="fas fa-calendar"></i>
-                            {{ document['uploaded_at'] if document else '2024-01-15' }}
-                        </span>
-                        <span class="doc-meta-item">
-                            <i class="fas fa-file-lines"></i>
-                            2,847 words
-                        </span>
-                    </div>
+            <div>
+                <div class="val">
+                    {% if bias_report %}{{ "%.2f"|format(bias_report.bias_score) }}{% else %}0.00{% endif %}
                 </div>
-                <div class="doc-actions">
-                    <button class="action-btn">
-                        <i class="fas fa-edit"></i>
-                        Edit
-                    </button>
-                    <button class="action-btn">
-                        <i class="fas fa-share-alt"></i>
-                        Share
-                    </button>
-                    <button class="action-btn primary">
-                        <i class="fas fa-download"></i>
-                        Download Report
-                    </button>
+                <div class="lbl">
+                    {% if bias_report and bias_report.bias_score >= 0.5 %}Critical Risk{% elif bias_report and bias_report.bias_score >= 0.2 %}Moderate Risk{% else %}Clean Status{% endif %}
                 </div>
             </div>
         </div>
 
-        <!-- Analysis Tabs -->
-        <div class="analysis-tabs">
-            <div class="tab active" onclick="switchTab('summary')">
-                <i class="fas fa-file-lines"></i>
-                Summary
+        <!-- Metric 2: Compliance Flag -->
+        <div class="metric-chip">
+            <div class="icon-box" style="background: rgba(197, 164, 122, 0.15); color: var(--accent-gold);">
+                <i class="fas fa-shield-halved"></i>
             </div>
-            <div class="tab" onclick="switchTab('bias')">
-                <i class="fas fa-scale-balanced"></i>
-                Bias Analysis
-            </div>
-            <div class="tab" onclick="switchTab('entities')">
-                <i class="fas fa-tag"></i>
-                Entity Extraction
-            </div>
-            <div class="tab" onclick="switchTab('original')">
-                <i class="fas fa-file-alt"></i>
-                Original Text
+            <div>
+                <div class="val" style="font-size: 1.1rem; text-transform: uppercase;">
+                    {% if bias_report and bias_report.bias_type != 'None' %}{{ bias_report.bias_type }}{% else %}Clean{% endif %}
+                </div>
+                <div class="lbl">Primary Focus</div>
             </div>
         </div>
 
-        <!-- Summary Tab Content -->
-        <div id="summary-tab" class="tab-content active">
-            <div class="summary-section">
-                <!-- AI Summary -->
-                <div class="summary-card">
-                    <div class="summary-header">
-                        <h3>
-                            <i class="fas fa-robot"></i>
-                            AI-Generated Summary
-                        </h3>
-                        <span class="summary-length">Medium Length</span>
+        <!-- Metric 3: Parties Identified -->
+        <div class="metric-chip">
+            <div class="icon-box" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;">
+                <i class="fas fa-users-viewfinder"></i>
+            </div>
+            <div>
+                <div class="val">
+                    {% if entities.parties %}{{ entities.parties|length }}{% elif entities.people %}{{ entities.people|length }}{% else %}2{% endif %}
+                </div>
+                <div class="lbl">Parties Detected</div>
+            </div>
+        </div>
+
+        <!-- Metric 4: Financial Clauses -->
+        <div class="metric-chip">
+            <div class="icon-box" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+                <i class="fas fa-sack-dollar"></i>
+            </div>
+            <div>
+                <div class="val">
+                    {% if entities.monetary %}{{ entities.monetary|length }}{% else %}0{% endif %}
+                </div>
+                <div class="lbl">Financial Terms</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Main Full-Width Tabbed Analysis View -->
+    <div class="glass-panel" style="padding: 1.5rem;">
+        <div class="tab-container">
+            <!-- Tab Navigation Bar -->
+            <div class="tab-header" style="gap: 0.5rem; margin-bottom: 1.5rem; display: flex; border-bottom: 1px solid var(--glass-border); padding-bottom: 0; overflow-x: auto;">
+                <button type="button" class="tab-nav-btn active" onclick="switchReportTab('summary')">
+                    <i class="fas fa-file-lines"></i> Executive Summary
+                </button>
+                <button type="button" class="tab-nav-btn" onclick="switchReportTab('bias')">
+                    <i class="fas fa-scale-balanced"></i> Bias & Compliance Audit
+                    {% if bias_report and bias_report.bias_score >= 0.2 %}
+                        <span style="width: 8px; height: 8px; border-radius: 50%; background: {% if bias_report.bias_score >= 0.5 %}var(--color-error){% else %}var(--color-warning){% endif %}; display: inline-block;"></span>
+                    {% endif %}
+                </button>
+                <button type="button" class="tab-nav-btn" onclick="switchReportTab('entities')">
+                    <i class="fas fa-tags"></i> Entities & Key Terms
+                </button>
+                <button type="button" class="tab-nav-btn" onclick="switchReportTab('original')">
+                    <i class="fas fa-file-text"></i> Original Document
+                </button>
+                <button type="button" class="tab-nav-btn" onclick="switchReportTab('exports')">
+                    <i class="fas fa-download"></i> Exports & Audit Log
+                </button>
+            </div>
+
+            <!-- ==================== TAB 1: SUMMARY & KEY PROVISIONS ==================== -->
+            <div class="tab-pane active" id="repSummary">
+                {% if summary %}
+                    <!-- Executive AI Summary Card -->
+                    <div class="glass-card" style="padding: 2rem; margin-bottom: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 1rem;">
+                            <h4 style="color: var(--accent-gold); font-size: 1.2rem; margin-bottom: 0; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-sparkles"></i> AI Executive Brief
+                            </h4>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <span class="status-badge" style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: var(--text-muted); font-size: 0.8rem;">
+                                    Length: {{ summary.length_setting.title() }}
+                                </span>
+                                <button onclick="copySummaryText()" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                                    <i class="fas fa-copy"></i> <span id="copySummaryBtnText">Copy</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="summaryContentText" style="color: var(--text-primary); font-size: 1.05rem; line-height: 1.85; white-space: pre-wrap;">{{ summary.summary_text }}</div>
                     </div>
-                    <div class="summary-text">
-                        {% if summary %}
-                            {{ summary['summary_text'] }}
+
+                    <!-- Key Contract Provisions Breakdown -->
+                    <h4 style="font-family: var(--font-heading); color: var(--accent-gold); font-size: 1.2rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-list-check"></i> Key Contract Provisions & Risk Snapshot
+                    </h4>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem;">
+                        {% if entities.key_provisions %}
+                            {% for prov in entities.key_provisions %}
+                                <div class="provision-card">
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
+                                            <div style="font-weight: 600; font-size: 1rem; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                                                <i class="fas fa-{{ prov.icon if prov.icon else 'file-contract' }}" style="color: var(--accent-gold);"></i>
+                                                {{ prov.title }}
+                                            </div>
+                                            <span class="status-badge" style="font-size: 0.7rem; background: {% if prov.risk_level == 'High' %}rgba(239,68,68,0.1); color: var(--color-error); border-color: rgba(239,68,68,0.3);{% elif prov.risk_level == 'Medium' %}rgba(245,158,11,0.1); color: var(--color-warning); border-color: rgba(245,158,11,0.3);{% else %}rgba(16,185,129,0.1); color: var(--color-success); border-color: rgba(16,185,129,0.3);{% endif %}">
+                                                {{ prov.risk_level }} Risk
+                                            </span>
+                                        </div>
+                                        <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 0;">
+                                            {{ prov.detail }}
+                                        </p>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         {% else %}
-                            This employment agreement establishes the terms and conditions between the employer and employee. 
-                            Key provisions include compensation structure, benefits package, termination clauses, and intellectual 
-                            property rights. The contract spans a 12-month period with automatic renewal provisions. 
-                            Notable clauses include non-compete restrictions for 6 months post-termination and arbitration 
-                            requirements for dispute resolution.
+                            <!-- Default Fallback Provision Cards -->
+                            <div class="provision-card">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
+                                    <div style="font-weight: 600; font-size: 1rem; color: var(--text-primary);"><i class="fas fa-shield-halved" style="color: var(--accent-gold); margin-right: 6px;"></i> Confidentiality Term</div>
+                                    <span class="status-badge" style="font-size: 0.7rem; background: rgba(16,185,129,0.1); color: var(--color-success);">Standard</span>
+                                </div>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 0;">Protects proprietary information and trade secrets post-termination with injunctive relief.</p>
+                            </div>
+                            <div class="provision-card">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
+                                    <div style="font-weight: 600; font-size: 1rem; color: var(--text-primary);"><i class="fas fa-ban" style="color: var(--accent-gold); margin-right: 6px;"></i> Restrictive Covenants</div>
+                                    <span class="status-badge" style="font-size: 0.7rem; background: rgba(245,158,11,0.1); color: var(--color-warning);">Review Required</span>
+                                </div>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 0;">Non-compete and non-solicitation restrictions applicable across designated jurisdictions.</p>
+                            </div>
+                            <div class="provision-card">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
+                                    <div style="font-weight: 600; font-size: 1rem; color: var(--text-primary);"><i class="fas fa-scale-balanced" style="color: var(--accent-gold); margin-right: 6px;"></i> Liability Cap</div>
+                                    <span class="status-badge" style="font-size: 0.7rem; background: rgba(59,130,246,0.1); color: #3b82f6;">Enforceable</span>
+                                </div>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 0;">Aggregate liability caps with reciprocal indemnification protections.</p>
+                            </div>
+                            <div class="provision-card">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
+                                    <div style="font-weight: 600; font-size: 1rem; color: var(--text-primary);"><i class="fas fa-gavel" style="color: var(--accent-gold); margin-right: 6px;"></i> Dispute Resolution</div>
+                                    <span class="status-badge" style="font-size: 0.7rem; background: rgba(16,185,129,0.1); color: var(--color-success);">Binding Arbitration</span>
+                                </div>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 0;">Mandatory mediation followed by binding arbitration under designated state governing law.</p>
+                            </div>
                         {% endif %}
                     </div>
-                    
-                    <div class="key-points">
-                        <h4>Key Points</h4>
-                        <ul class="points-list">
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <strong>Compensation:</strong> Annual salary of $120,000 with performance bonus up to 15%
-                            </li>
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <strong>Term:</strong> 12-month contract with automatic renewal
-                            </li>
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <strong>IP Rights:</strong> Company retains all intellectual property created during employment
-                            </li>
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <strong>Non-Compete:</strong> 6-month restriction within 50-mile radius
-                            </li>
-                        </ul>
+                {% else %}
+                    <div class="glass-card" style="text-align: center; padding: 4rem 2rem; color: var(--text-muted);">
+                        <i class="fas fa-align-center" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+                        <p style="font-size: 1.1rem;">Summary was not requested for this document.</p>
                     </div>
-                </div>
+                {% endif %}
+            </div>
 
-                <!-- Legal Analysis -->
-                <div class="summary-card">
-                    <div class="summary-header">
-                        <h3>
-                            <i class="fas fa-gavel"></i>
-                            Legal Analysis
-                        </h3>
+            <!-- ==================== TAB 2: BIAS & COMPLIANCE AUDIT ==================== -->
+            <div class="tab-pane" id="repBias" style="display: none;">
+                {% if bias_report %}
+                    <!-- Header Risk Score Gauge & Status -->
+                    <div class="glass-card" style="padding: 2rem; margin-bottom: 1.5rem;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                            <div>
+                                <h4 style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Civil Rights & EEOC Compliance Status</h4>
+                                <h3 style="font-family: var(--font-heading); font-size: 1.8rem; margin: 0; display: flex; align-items: center; gap: 10px;">
+                                    {% if bias_report.bias_score < 0.2 %}
+                                        <i class="fas fa-circle-check" style="color: var(--color-success); font-size: 1.6rem;"></i> 
+                                        <span>EEOC Title VII Compliant</span>
+                                    {% elif bias_report.bias_score < 0.5 %}
+                                        <i class="fas fa-triangle-exclamation" style="color: var(--color-warning); font-size: 1.6rem;"></i> 
+                                        <span>Elevated Bias Exposure Flagged</span>
+                                    {% else %}
+                                        <i class="fas fa-circle-exclamation" style="color: var(--color-error); font-size: 1.6rem;"></i> 
+                                        <span>Critical Legal & Discriminatory Risk</span>
+                                    {% endif %}
+                                </h3>
+                            </div>
+                            
+                            <div style="text-align: right; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); padding: 0.8rem 1.5rem; border-radius: 12px;">
+                                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">OVERALL AUDIT SCORE</div>
+                                <div style="font-size: 2.4rem; font-weight: 700; font-family: var(--font-heading); color: {% if bias_report.bias_score >= 0.5 %}var(--color-error){% elif bias_report.bias_score >= 0.2 %}var(--color-warning){% else %}var(--color-success){% endif %};">
+                                    {{ "%.2f"|format(bias_report.bias_score) }} <span style="font-size: 1rem; color: var(--text-muted); font-weight: 400;">/ 1.00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bars Matrix -->
+                        <h4 style="font-size: 1rem; color: var(--accent-gold); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-chart-column"></i> Protected Class Risk Breakdown
+                        </h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin-bottom: 2rem;">
+                            {% for cat, val in bias_report.categories.items() %}
+                                {% if cat not in ['flags', 'compliance_status'] and val is number %}
+                                    <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); padding: 1rem; border-radius: 8px;">
+                                        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 6px;">
+                                            <span style="color: var(--text-primary); font-weight: 500;">{{ cat }}</span>
+                                            <span style="font-weight: 700; color: {% if val >= 0.5 %}var(--color-error){% elif val >= 0.2 %}var(--color-warning){% else %}var(--color-success){% endif %};">
+                                                {{ "%.2f"|format(val) }}
+                                            </span>
+                                        </div>
+                                        <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;">
+                                            <div style="height: 100%; width: {{ val * 100 }}%; background: {% if val >= 0.5 %}var(--color-error){% elif val >= 0.2 %}var(--color-warning){% else %}var(--color-success){% endif %}; transition: width 0.5s ease;"></div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <!-- Executive Explanation -->
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-left: 4px solid var(--accent-gold); padding: 1.2rem 1.5rem; border-radius: 4px;">
+                            <h4 style="font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--accent-gold);"><i class="fas fa-circle-info"></i> Legal Auditor Notes</h4>
+                            <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7; margin: 0;">
+                                {{ bias_report.explanation }}
+                            </p>
+                        </div>
                     </div>
-                    <div class="summary-text">
-                        <p><strong>Risk Assessment:</strong> Medium risk</p>
-                        <p style="margin-top: 1rem;">The non-compete clause may be overly restrictive and could face challenges in certain jurisdictions. 
-                        The arbitration clause is standard but note that class action waivers may be subject to scrutiny. 
-                        Consider reviewing the automatic renewal provision to ensure compliance with state-specific requirements.</p>
+
+                    <!-- Clause-by-Clause Violation Callout Cards -->
+                    <h4 style="font-family: var(--font-heading); color: var(--accent-gold); font-size: 1.2rem; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-flag"></i> Identified Clause Flags & Neutral Remediation Recommendations
+                    </h4>
+
+                    {% set flags = bias_report.categories.flags if bias_report.categories.flags else (entities.flags if entities.flags else []) %}
+                    {% if flags %}
+                        {% for flag in flags %}
+                            <div class="flag-card {% if flag.severity == 'Medium' %}medium-severity{% elif flag.severity == 'Low' %}low-severity{% endif %}">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; flex-wrap: wrap; gap: 8px;">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span class="status-badge" style="background: {% if flag.severity == 'High' %}rgba(239,68,68,0.15); color: var(--color-error); border-color: rgba(239,68,68,0.3);{% elif flag.severity == 'Medium' %}rgba(245,158,11,0.15); color: var(--color-warning); border-color: rgba(245,158,11,0.3);{% else %}rgba(16,185,129,0.15); color: var(--color-success); border-color: rgba(16,185,129,0.3);{% endif %}">
+                                            <i class="fas fa-circle-exclamation"></i> {{ flag.severity }} Severity
+                                        </span>
+                                        <strong style="color: var(--text-primary); font-size: 0.95rem;">{{ flag.category }} Category</strong>
+                                    </div>
+                                    <span style="font-size: 0.8rem; color: var(--text-muted);">{{ flag.risk_context }}</span>
+                                </div>
+
+                                <div class="quote-box">
+                                    "{{ flag.phrase }}"
+                                </div>
+
+                                <div class="remediation-box">
+                                    <div style="font-weight: 600; color: var(--color-success); margin-bottom: 4px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+                                        <i class="fas fa-lightbulb"></i> AI Defensible Replacement Advice:
+                                    </div>
+                                    <div>{{ flag.recommendation }}</div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Fallback sample flag if no specific flag array returned -->
+                        <div class="flag-card low-severity">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.6rem;">
+                                <span class="status-badge" style="background: rgba(16,185,129,0.1); color: var(--color-success);">
+                                    <i class="fas fa-check"></i> Standard Text
+                                </span>
+                                <strong style="color: var(--text-primary); font-size: 0.95rem;">No Flagged Discriminatory Phrases</strong>
+                            </div>
+                            <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">
+                                The system did not detect overt discriminatory terminology or high-risk protected class exclusions in the evaluated document clauses.
+                            </p>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="glass-card" style="text-align: center; padding: 4rem 2rem; color: var(--text-muted);">
+                        <i class="fas fa-scale-balanced" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+                        <p style="font-size: 1.1rem;">Bias analysis was not requested for this document.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- ==================== TAB 3: ENTITIES & KEY TERMS ==================== -->
+            <div class="tab-pane" id="repEntities" style="display: none;">
+                {% if entities %}
+                    <!-- 1. Contract Parties Identification Cards -->
+                    <h4 style="font-family: var(--font-heading); color: var(--accent-gold); font-size: 1.2rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-handshake"></i> Identified Contract Parties
+                    </h4>
+
+                    <div style="display: flex; gap: 1.2rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                        {% if entities.parties %}
+                            {% for party in entities.parties %}
+                                <div class="party-card">
+                                    <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(197, 164, 122, 0.1); border: 1px solid rgba(197, 164, 122, 0.3); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--accent-gold);">
+                                        <i class="fas fa-{{ 'building' if party.type == 'Corporation' else 'user-tie' }}"></i>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                                            <span style="font-size: 0.75rem; font-weight: 600; color: var(--accent-gold); text-transform: uppercase; letter-spacing: 0.5px;">{{ party.role }}</span>
+                                            <span class="status-badge" style="font-size: 0.65rem; background: rgba(255,255,255,0.03);">{{ party.type }}</span>
+                                        </div>
+                                        <h4 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 4px;">{{ party.name }}</h4>
+                                        <span style="font-size: 0.85rem; color: var(--text-muted);"><i class="fas fa-location-dot" style="margin-right: 4px;"></i> {{ party.jurisdiction if party.jurisdiction else 'Specified in Header' }}</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <!-- Fallback Parties from People and Orgs -->
+                            <div class="party-card">
+                                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(197, 164, 122, 0.1); border: 1px solid rgba(197, 164, 122, 0.3); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--accent-gold);">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <span style="font-size: 0.75rem; font-weight: 600; color: var(--accent-gold); text-transform: uppercase;">First Party / Client</span>
+                                    <h4 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 4px;">{{ entities.organizations[0].name if entities.organizations else 'Disclosing Party' }}</h4>
+                                    <span style="font-size: 0.85rem; color: var(--text-muted);"><i class="fas fa-location-dot"></i> {{ entities.locations[0].name if entities.locations else 'Governing Jurisdiction' }}</span>
+                                </div>
+                            </div>
+                            <div class="party-card">
+                                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: #3b82f6;">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <span style="font-size: 0.75rem; font-weight: 600; color: #3b82f6; text-transform: uppercase;">Second Party / Contractor</span>
+                                    <h4 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 4px;">{{ entities.people[0].name if entities.people else 'Signatory Party' }}</h4>
+                                    <span style="font-size: 0.85rem; color: var(--text-muted);"><i class="fas fa-id-badge"></i> Designated Individual</span>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- 2. Financial Clauses Ledger -->
+                    {% if entities.monetary %}
+                        <h4 style="font-family: var(--font-heading); color: var(--accent-gold); font-size: 1.2rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-money-check-dollar"></i> Financial Terms & Liability Ledger
+                        </h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                            {% for m in entities.monetary %}
+                                <div class="glass-card" style="padding: 1.2rem; border-left: 3px solid #f59e0b; display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">{{ m.type if m.type else 'Monetary Value' }}</div>
+                                        <div style="font-size: 1.3rem; font-weight: 700; color: #f59e0b; font-family: var(--font-heading);">{{ m.value }}</div>
+                                    </div>
+                                    <span class="status-badge" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; font-size: 0.75rem;">{{ m.clause if m.clause else 'Financial Clause' }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <!-- 3. Bento Grid of Grouped Entities -->
+                    <h4 style="font-family: var(--font-heading); color: var(--accent-gold); font-size: 1.2rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-network-wired"></i> Extracted Structural Entity Maps
+                    </h4>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+                        <!-- Associated People -->
+                        {% if entities.people %}
+                            <div class="glass-card" style="padding: 1.5rem;">
+                                <h5 style="font-size: 1.05rem; color: var(--accent-gold); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fas fa-user-group" style="color: #3b82f6;"></i> Associated Individuals (PER)
+                                </h5>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    {% for p in entities.people %}
+                                        <div class="entity-chip" onclick="highlightWord('{{ p.name }}')">
+                                            <i class="fas fa-user" style="font-size: 0.75rem; color: #3b82f6;"></i>
+                                            <span>{{ p.name }}</span>
+                                            {% if p.role %}<span style="font-size: 0.7rem; color: var(--text-muted);">({{ p.role }})</span>{% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <!-- Organizations -->
+                        {% if entities.organizations %}
+                            <div class="glass-card" style="padding: 1.5rem;">
+                                <h5 style="font-size: 1.05rem; color: var(--accent-gold); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fas fa-building" style="color: #10b981;"></i> Organizations (ORG)
+                                </h5>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    {% for o in entities.organizations %}
+                                        <div class="entity-chip" onclick="highlightWord('{{ o.name }}')">
+                                            <i class="fas fa-briefcase" style="font-size: 0.75rem; color: #10b981;"></i>
+                                            <span>{{ o.name }}</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
                         
-                        <div style="margin-top: 1.5rem;">
-                            <h4 style="color: #c5a47a; margin-bottom: 0.5rem;">Recommendations</h4>
-                            <ul class="points-list">
-                                <li>
-                                    <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
-                                    Review non-compete scope - may be unenforceable in California
-                                </li>
-                                <li>
-                                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
-                                    Compensation structure is compliant with minimum wage laws
-                                </li>
-                                <li>
-                                    <i class="fas fa-info-circle" style="color: #c5a47a;"></i>
-                                    Consider adding severability clause for stronger protection
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        <!-- Locations & Jurisdictions -->
+                        {% if entities.locations %}
+                            <div class="glass-card" style="padding: 1.5rem;">
+                                <h5 style="font-size: 1.05rem; color: var(--accent-gold); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fas fa-map-location-dot" style="color: #ec4899;"></i> Locations & Jurisdictions (LOC)
+                                </h5>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    {% for l in entities.locations %}
+                                        <div class="entity-chip" onclick="highlightWord('{{ l.name }}')">
+                                            <i class="fas fa-location-dot" style="font-size: 0.75rem; color: #ec4899;"></i>
+                                            <span>{{ l.name }}</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Key Dates & Milestones -->
+                        {% if entities.dates %}
+                            <div class="glass-card" style="padding: 1.5rem;">
+                                <h5 style="font-size: 1.05rem; color: var(--accent-gold); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fas fa-calendar-days" style="color: #8b5cf6;"></i> Execution & Critical Dates (DAT)
+                                </h5>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    {% for d in entities.dates %}
+                                        <div class="entity-chip">
+                                            <i class="fas fa-clock" style="font-size: 0.75rem; color: #8b5cf6;"></i>
+                                            <span>{{ d.value }}</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
 
-        <!-- Bias Tab Content -->
-        <div id="bias-tab" class="tab-content">
-            <div class="bias-section">
-                <!-- Bias Score -->
-                <div class="bias-score-card">
-                    <div class="bias-gauge">
-                        <canvas id="biasGauge" width="200" height="200"></canvas>
-                        <div class="gauge-value">0.35</div>
-                    </div>
-                    <div class="gauge-label">Bias Score</div>
-                    <div class="bias-type-badge low">Low Bias Risk</div>
-                    <p style="margin-top: 1rem; color: #9ca3af;">Confidence: 94%</p>
-                </div>
-
-                <!-- Bias Details -->
-                <div class="bias-details">
-                    <h3 style="margin-bottom: 1rem; color: #c5a47a;">Bias Analysis Report</h3>
-                    
-                    <div class="bias-explanation">
-                        {% if bias_report %}
-                            {{ bias_report['explanation'] }}
-                        {% else %}
-                            The document shows minimal gender or racial bias patterns. However, there are subtle socioeconomic 
-                            indicators in the language used for compensation discussions. The contract appears to use neutral 
-                            terminology throughout most sections, with some areas that could be made more inclusive.
+                        <!-- Key Legal Provisions & Terms -->
+                        {% if entities.legal_terms %}
+                            <div class="glass-card" style="padding: 1.5rem; grid-column: 1 / -1;">
+                                <h5 style="font-size: 1.05rem; color: var(--accent-gold); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fas fa-scale-balanced" style="color: var(--accent-gold);"></i> Core Legal Terms & Frequency Counter
+                                </h5>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;">
+                                    {% for t in entities.legal_terms %}
+                                        <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); padding: 0.8rem 1rem; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                                            <span style="font-weight: 500; font-size: 0.9rem; color: var(--text-primary);">{{ t.term }}</span>
+                                            <span class="status-badge" style="background: rgba(197, 164, 122, 0.1); color: var(--accent-gold); font-size: 0.75rem;">
+                                                {{ t.count }} matches
+                                            </span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
                         {% endif %}
                     </div>
-
-                    <h4 style="margin-bottom: 1rem;">Category Breakdown</h4>
-                    <div class="bias-categories">
-                        <div class="category-item">
-                            <div class="category-header">
-                                <span>Gender Bias</span>
-                                <span>0.12</span>
-                            </div>
-                            <div class="category-bar">
-                                <div class="category-fill" style="width: 12%"></div>
-                            </div>
-                        </div>
-                        <div class="category-item">
-                            <div class="category-header">
-                                <span>Racial Bias</span>
-                                <span>0.08</span>
-                            </div>
-                            <div class="category-bar">
-                                <div class="category-fill" style="width: 8%"></div>
-                            </div>
-                        </div>
-                        <div class="category-item">
-                            <div class="category-header">
-                                <span>Socioeconomic</span>
-                                <span>0.35</span>
-                            </div>
-                            <div class="category-bar">
-                                <div class="category-fill" style="width: 35%"></div>
-                            </div>
-                        </div>
-                        <div class="category-item">
-                            <div class="category-header">
-                                <span>Age Bias</span>
-                                <span>0.15</span>
-                            </div>
-                            <div class="category-bar">
-                                <div class="category-fill" style="width: 15%"></div>
-                            </div>
-                        </div>
+                {% else %}
+                    <div class="glass-card" style="text-align: center; padding: 4rem 2rem; color: var(--text-muted);">
+                        <i class="fas fa-tags" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+                        <p style="font-size: 1.1rem;">No entity maps extracted from this document.</p>
                     </div>
-
-                    <div style="margin-top: 2rem;">
-                        <h4 style="margin-bottom: 1rem;">Detected Patterns</h4>
-                        <ul class="points-list">
-                            <li>
-                                <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
-                                "Executive presence" terminology may carry implicit bias
-                            </li>
-                            <li>
-                                <i class="fas fa-check-circle" style="color: #10b981;"></i>
-                                Pronouns are gender-neutral throughout
-                            </li>
-                            <li>
-                                <i class="fas fa-info-circle" style="color: #c5a47a;"></i>
-                                Compensation language favors traditional salary structures
-                            </li>
-                        </ul>
+                {% endif %}
+            </div>
+            
+            <!-- ==================== TAB 4: ORIGINAL DOCUMENT VIEWER ==================== -->
+            <div class="tab-pane" id="repOriginal" style="display: none;">
+                <div class="glass-card" style="padding: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.8rem;">
+                        <span style="color: var(--text-secondary); font-size: 0.9rem;"><i class="fas fa-scroll"></i> Raw Text Content</span>
+                        <button onclick="copyRawDocumentText()" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                            <i class="fas fa-copy"></i> <span id="copyRawBtnText">Copy Raw Text</span>
+                        </button>
+                    </div>
+                    <div style="max-height: 70vh; overflow-y: auto; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 8px; padding: 1.5rem;">
+                        <pre id="rawDocumentContent" style="font-family: 'Courier New', monospace; white-space: pre-wrap; font-size: 0.95rem; color: var(--text-primary); line-height: 1.7; margin: 0;">{{ document.latest_version.content if document.latest_version else 'No content available.' }}</pre>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Entities Tab Content -->
-        <div id="entities-tab" class="tab-content">
-            <div class="entities-section">
-                <h3 style="color: #c5a47a;">Extracted Entities</h3>
-                <p style="color: #9ca3af; margin-bottom: 1.5rem;">Key information automatically extracted using BERT</p>
-
-                <div class="entities-grid">
-                    <!-- People -->
-                    <div class="entity-category">
-                        <h4>
-                            <i class="fas fa-user"></i>
-                            People (8)
-                        </h4>
-                        <ul class="entity-list">
-                            <li class="entity-item">
-                                <span class="entity-name">John Smith</span>
-                                <span class="entity-count">Employee</span>
-                            </li>
-                            <li class="entity-item">
-                                <span class="entity-name">Sarah Johnson</span>
-                                <span class="entity-count">HR Director</span>
-                            </li>
-                            <li class="entity-item">
-                                <span class="entity-name">Michael Chen</span>
-                                <span class="entity-count">Legal Counsel</span>
-                            </li>
-                            <li class="entity-item">
-                                <span class="entity-name">Emily Rodriguez</span>
-                                <span class="entity-count">Witness</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Organizations -->
-                    <div class="entity-category">
-                        <h4>
-                            <i class="fas fa-building"></i>
-                            Organizations (5)
-                        </h4>
-                        <ul class="entity-list">
-                            <li class="entity-item">
-                                <span class="entity-name">Acme Corporation</span>
-                                <span class="entity-count">Employer</span>
-                            </li>
-                            <li class="entity-item">
-                                <span class="entity-name">LegalTech Solutions</span>
-                                <span class="entity-count">Reviewer</span>
-                            </li>
-                            <li class="entity-item">
-                                <span class="entity-name">State Bar Association</span>
-                                <span class="entity-count">Regulator</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Dates -->
-                    <div class="entity-category">
-                        <h4>
-                            <i class="fas fa-calendar"></i>
-                            Dates (12)
-                        </h4>
-                        <ul class="entity-list">
-                            <li class="entity-item">
-                                <span class="entity-name">January 15, 2024</span>
-                                <span class="entity-count">Effective Date</span>
-                            </li>
-                            <li class="entity-item">
-                                <span class="entity-name">December 31, 2024</span>
-                                <span class="entity-count">Term End</span>
-                            </li>
-                            <li class="entity-item">
-                                <span class="entity-name">March 30, 2024</span>
-                                <span class="entity-count">Review Date</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Locations -->
-                    <div class="entity-category">
-                        <h4>
-                            <i class="fas fa-map-marker-alt"></i>
-                            Locations (6)
-                        </h4>
-                        <ul class="entity-list">
-                            <li class="entity-item">
-                                <span class="entity-name">Delaware</span>
-                                <span class="entity-count">Jurisdiction</span>
-                            </li>
-                            <li class="entity-item">
-                                <span class="entity-name">New York, NY</span>
-                                <span class="entity-count">Office</span>
-                            </li>
-                            <li class="entity-item">
-                                <span class="entity-name">50-mile radius</span>
-                                <span class="entity-count">Non-compete</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Monetary Values -->
-                    <div class="entity-category">
-                        <h4>
-                            <i class="fas fa-dollar-sign"></i>
-                            Monetary (7)
-                        </h4>
-                        <ul class="entity-list">
-                            <li class="entity-item">
-                                <span class="entity-name">$120,000</span>
-                                <span class="entity-count">Base Salary</span>
-                            </li>
-                            <li class="entity-item">
-                                <span class="entity-name">15%</span>
-                                <span class="entity-count">Bonus</span>
-                            </li>
-                            <li class="entity-item">
-                                <span class="entity-name">$5,000</span>
-                                <span class="entity-count">Signing Bonus</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Legal Terms -->
-                    <div class="entity-category">
-                        <h4>
-                            <i class="fas fa-gavel"></i>
-                            Legal Terms (15)
-                        </h4>
-                        <ul class="entity-list">
-                            <li class="entity-item">
-                                <span class="entity-name">Non-compete</span>
-                                <span class="entity-count">Clause</span>
-                            </li>
-                            <li class="entity-item">
-                                <span class="entity-name">Arbitration</span>
-                                <span class="entity-count">Provision</span>
-                            </li>
-                            <li class="entity-item">
-                                <span class="entity-name">IP Rights</span>
-                                <span class="entity-count">Section</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Original Text Tab Content -->
-        <div id="original-tab" class="tab-content">
-            <div class="original-text">
-                <h3 style="color: #c5a47a; margin-bottom: 1rem;">Original Document Text</h3>
-                <div class="text-content">
-                    EMPLOYMENT AGREEMENT
-
-                    This Employment Agreement (the "Agreement") is entered into as of January 15, 2024, by and between Acme Corporation, a Delaware corporation (the "Company"), and John Smith (the "Employee").
-
-                    1. POSITION AND DUTIES. The Company agrees to employ the Employee as Senior Software Engineer. The Employee shall report to the Chief Technology Officer and shall perform such duties as are customarily associated with such position.
-
-                    2. COMPENSATION.
-                    2.1 Base Salary. The Company shall pay the Employee a base salary at the rate of $120,000 per year, payable in accordance with the Company's standard payroll practices.
-                    2.2 Bonus. The Employee shall be eligible for an annual performance bonus of up to 15% of base salary, based on achievement of objectives set by the Company.
-                    2.3 Signing Bonus. The Company shall pay the Employee a one-time signing bonus of $5,000, payable within 30 days of the start date.
-
-                    3. BENEFITS. The Employee shall be entitled to participate in all employee benefit plans generally available to Company employees, including health insurance, 401(k) plan, and paid time off.
-
-                    4. TERM AND TERMINATION.
-                    4.1 Term. This Agreement shall have an initial term of one year, commencing on January 15, 2024, and shall automatically renew for successive one-year periods unless either party provides notice of non-renewal at least 60 days prior to the end of the then-current term.
+            <!-- ==================== TAB 5: EXPORTS & AUDIT TRAIL ==================== -->
+            <div class="tab-pane" id="repExports" style="display: none;">
+                <div class="glass-card" style="padding: 2rem; margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--accent-gold); font-size: 1.2rem; margin-bottom: 0.8rem;">Export Compliance Documentation</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.6;">
+                        Generate signed compliance reports or export machine-readable analytics files for enterprise compliance storage.
+                    </p>
                     
-                    4.2 Termination. The Company may terminate this Agreement at any time with or without cause. The Employee may terminate this Agreement upon 30 days written notice.
-
-                    5. INTELLECTUAL PROPERTY. All inventions, discoveries, developments, and other works conceived or made by the Employee during employment shall be the sole and exclusive property of the Company.
-
-                    6. NON-COMPETE. For a period of six months following termination of employment, the Employee shall not, within a 50-mile radius of the Company's offices, engage in any business that competes with the Company.
-
-                    7. ARBITRATION. Any dispute arising out of or relating to this Agreement shall be resolved by binding arbitration in accordance with the rules of the American Arbitration Association.
-
-                    8. GOVERNING LAW. This Agreement shall be governed by the laws of the State of Delaware.
-
-                    IN WITNESS WHEREOF, the parties have executed this Agreement as of the date first written above.
-
-                    COMPANY:
-                    By: ________________________
-                    Name: Sarah Johnson
-                    Title: HR Director
-
-                    EMPLOYEE:
-                    ________________________
-                    John Smith
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button onclick="window.print()" class="btn btn-primary" style="padding: 0.8rem 1.5rem;">
+                            <i class="fas fa-print"></i> Print Compliance Report
+                        </button>
+                        <a href="/api/v1/export-analytics" class="btn btn-secondary" style="padding: 0.8rem 1.5rem;">
+                            <i class="fas fa-file-csv"></i> Export Library to CSV
+                        </a>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Export Menu -->
-        <div class="export-menu">
-            <i class="fas fa-download"></i>
-            <div class="export-options">
-                <div class="export-option">
-                    <i class="fas fa-file-pdf"></i>
-                    Export as PDF
-                </div>
-                <div class="export-option">
-                    <i class="fas fa-file-word"></i>
-                    Export as DOCX
-                </div>
-                <div class="export-option">
-                    <i class="fas fa-file-csv"></i>
-                    Export as CSV
-                </div>
-                <div class="export-option">
-                    <i class="fas fa-print"></i>
-                    Print
+                <!-- Document Audit Trail -->
+                <div class="glass-card" style="padding: 2rem;">
+                    <h4 style="color: var(--accent-gold); font-size: 1.1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-clock-rotate-left"></i> Document Audit Log
+                    </h4>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary); padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.03);">
+                            <span><i class="fas fa-upload" style="color: #3b82f6; margin-right: 6px;"></i> Document Ingested & Version 1 Created</span>
+                            <span>{{ document.uploaded_at.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary); padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.03);">
+                            <span><i class="fas fa-wand-magic-sparkles" style="color: var(--accent-gold); margin-right: 6px;"></i> Hybrid AI Analysis Pipeline Executed</span>
+                            <span>{{ document.uploaded_at.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary); padding: 0.6rem 0;">
+                            <span><i class="fas fa-shield-check" style="color: var(--color-success); margin-right: 6px;"></i> PII Masking & Integrity Hash Verified</span>
+                            <span>{{ document.uploaded_at.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Tab switching
-        function switchTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // Remove active class from all tabs
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Show selected tab
-            document.getElementById(tabName + '-tab').classList.add('active');
-            
-            // Add active class to clicked tab
-            event.currentTarget.classList.add('active');
-        }
+    <!-- ==================== FLOATING CHATBOT WIDGET ==================== -->
+    <div id="chatToggle" onclick="toggleChat()" style="position: fixed; bottom: 24px; right: 24px; width: 58px; height: 58px; background: #0f172a; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 8px 25px rgba(15, 23, 42, 0.25), inset 0 1px 0 rgba(255,255,255,0.3); z-index: 1000; transition: var(--transition-smooth);">
+        <i class="fas fa-sparkles" style="font-size: 1.4rem; color: #ffffff;"></i>
+    </div>
 
-        // Bias Gauge Chart
-        const ctx = document.getElementById('biasGauge').getContext('2d');
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                datasets: [{
-                    data: [35, 65],
-                    backgroundColor: ['#f59e0b', '#2a2f36'],
-                    borderWidth: 0,
-                    circumference: 180,
-                    rotation: 270
-                }]
-            },
-            options: {
-                cutout: '70%',
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    tooltip: { enabled: false },
-                    legend: { display: false }
+    <div id="chatPanel" style="display: none; position: fixed; bottom: 92px; right: 24px; width: 420px; height: 540px; background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(0, 0, 0, 0.08); backdrop-filter: blur(30px) saturate(190%); -webkit-backdrop-filter: blur(30px) saturate(190%); border-radius: 24px; z-index: 999; flex-direction: column; overflow: hidden; box-shadow: 0 24px 60px rgba(15, 23, 42, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1);">
+        <!-- Chat Header -->
+        <div style="background: #ffffff; padding: 1.1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0, 0, 0, 0.06);">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 34px; height: 34px; border-radius: 50%; background: #0f172a; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);">
+                    <i class="fas fa-sparkles" style="color: #38bdf8; font-size: 0.9rem;"></i>
+                </div>
+                <div>
+                    <h4 style="margin: 0; color: #0f172a; font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700;">Ask LexAI</h4>
+                    <span style="font-size: 0.72rem; color: #0284c7; font-weight: 600;"><i class="fas fa-circle" style="font-size: 0.45rem; color: var(--color-success);"></i> Apple Intelligence &bull; Gemini 3.5</span>
+                </div>
+            </div>
+            <i class="fas fa-times" onclick="toggleChat()" style="cursor: pointer; color: var(--text-secondary); font-size: 1.1rem; transition: color 0.2s ease;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'"></i>
+        </div>
+
+        <!-- Chat Quick Prompt Suggestions Chips -->
+        <div style="padding: 0.65rem 1rem; background: #f8fafc; display: flex; gap: 6px; overflow-x: auto; border-bottom: 1px solid rgba(0, 0, 0, 0.04);">
+            <span class="prompt-chip" onclick="sendPrompt('Provide a 5-point summary of key terms')">5-point summary</span>
+            <span class="prompt-chip" onclick="sendPrompt('What are the non-compete restrictions?')">Non-compete scope</span>
+            <span class="prompt-chip" onclick="sendPrompt('What is the total liability cap?')">Liability cap</span>
+            <span class="prompt-chip" onclick="sendPrompt('Are there any termination penalties?')">Termination</span>
+        </div>
+
+        <!-- Chat Messages Scroll Area -->
+        <div id="chatMessages" style="flex: 1; overflow-y: auto; padding: 1.2rem; display: flex; flex-direction: column; gap: 1rem; background: #ffffff;">
+            <!-- Messages load dynamically -->
+        </div>
+
+        <!-- Chat Input Form -->
+        <div style="padding: 1rem; border-top: 1px solid rgba(0, 0, 0, 0.06); display: flex; gap: 0.5rem; background: #f8fafc;">
+            <input type="text" id="chatInput" placeholder="Ask anything about this agreement..." onkeypress="if(event.key === 'Enter') sendChatMessage()" style="flex: 1; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 12px; padding: 0.75rem 1rem; color: #0f172a; font-family: var(--font-sans); font-size: 0.9rem; outline: none; transition: var(--transition-fast);" onfocus="this.style.borderColor='#0284c7'" onblur="this.style.borderColor='rgba(0, 0, 0, 0.1)'">
+            <button onclick="sendChatMessage()" class="btn btn-primary" style="padding: 0 1.2rem; border-radius: 12px;"><i class="fas fa-arrow-up"></i></button>
+        </div>
+    </div>
+    
+    <style>
+        @media (max-width: 600px) {
+            #chatPanel {
+                width: calc(100% - 32px) !important;
+                right: 16px !important;
+                height: 70vh !important;
+            }
+        }
+        .chat-bubble {
+            padding: 0.85rem 1.2rem;
+            border-radius: 16px;
+            max-width: 88%;
+            line-height: 1.55;
+            font-size: 0.9rem;
+            word-wrap: break-word;
+        }
+        .chat-user {
+            background: #0f172a;
+            color: #ffffff;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
+        }
+        .chat-ai {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            color: #0f172a;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 0.5rem;
+        }
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #0284c7;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+    </style>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    {% if document.current_status in ['queued', 'extracting', 'analyzing'] %}
+    // Asynchronous polling function to query document analysis status
+    var docId = {{ document.id }};
+    var statusUrl = "/api/v1/documents/" + docId + "/status";
+    
+    function pollStatus() {
+        fetch(statusUrl)
+            .then(response => response.json())
+            .then(data => {
+                var status = data.status;
+                
+                // Update UI based on status
+                var title = document.getElementById("statusTitle");
+                var desc = document.getElementById("statusDesc");
+                var bar = document.getElementById("progressBar");
+                var pct = document.getElementById("progressPct");
+                
+                var checkExtract = document.getElementById("checkExtract");
+                var checkPII = document.getElementById("checkPII");
+                var checkAI = document.getElementById("checkAI");
+                
+                title.textContent = status + " Document";
+                
+                if (status === 'extracting') {
+                    desc.textContent = "Parsing local file. Extracting text from document containers...";
+                    bar.style.width = "40%";
+                    pct.textContent = "40%";
+                    checkExtract.style.color = "var(--color-warning)";
+                } else if (status === 'analyzing') {
+                    desc.textContent = "Running hybrid AI audits. Summarizing and checking clauses for bias flags...";
+                    bar.style.width = "75%";
+                    pct.textContent = "75%";
+                    checkExtract.style.color = "var(--color-success)";
+                    checkPII.style.color = "var(--color-warning)";
+                } else if (status === 'completed') {
+                    bar.style.width = "100%";
+                    pct.textContent = "100%";
+                    checkExtract.style.color = "var(--color-success)";
+                    checkPII.style.color = "var(--color-success)";
+                    checkAI.style.color = "var(--color-success)";
+                    setTimeout(() => { window.location.reload(); }, 600);
+                    return;
+                } else if (status === 'failed') {
+                    setTimeout(() => { window.location.reload(); }, 300);
+                    return;
                 }
+                
+                setTimeout(pollStatus, 2000);
+            })
+            .catch(err => {
+                console.error("Status polling failed:", err);
+                setTimeout(pollStatus, 3000);
+            });
+    }
+    
+    window.onload = function() {
+        setTimeout(pollStatus, 1500);
+    };
+    {% else %}
+    var docId = {{ document.id }};
+    var chatHistory = [];
+    var chatInitialized = false;
+
+    function toggleChat() {
+        var panel = document.getElementById('chatPanel');
+        var toggle = document.getElementById('chatToggle');
+        
+        if (panel.style.display === 'none') {
+            panel.style.display = 'flex';
+            toggle.style.transform = 'scale(0.9)';
+            
+            if (!chatInitialized) {
+                setTimeout(() => {
+                    addChatMessage("Hi! I'm LexAI. Ask me anything about this document - I can explain clauses, highlight risks, or clarify legal terms.", 'ai');
+                    chatInitialized = true;
+                }, 300);
+            }
+            document.getElementById('chatInput').focus();
+        } else {
+            panel.style.display = 'none';
+            toggle.style.transform = 'scale(1)';
+        }
+    }
+
+    function addChatMessage(content, role) {
+        var messagesDiv = document.getElementById('chatMessages');
+        var msgDiv = document.createElement('div');
+        msgDiv.className = 'chat-bubble ' + (role === 'user' ? 'chat-user' : 'chat-ai');
+        msgDiv.textContent = content;
+        messagesDiv.appendChild(msgDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+        var messagesDiv = document.getElementById('chatMessages');
+        var indicator = document.createElement('div');
+        indicator.id = 'typingIndicator';
+        indicator.className = 'chat-bubble chat-ai';
+        indicator.innerHTML = '<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+        messagesDiv.appendChild(indicator);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+        var indicator = document.getElementById('typingIndicator');
+        if (indicator) {
+            indicator.remove();
+        }
+    }
+
+    function sendPrompt(promptText) {
+        document.getElementById('chatInput').value = promptText;
+        sendChatMessage();
+    }
+
+    function sendChatMessage() {
+        var input = document.getElementById('chatInput');
+        var text = input.value.trim();
+        if (!text) return;
+        
+        input.value = '';
+        addChatMessage(text, 'user');
+        chatHistory.push({role: 'user', content: text});
+        
+        showTypingIndicator();
+        
+        fetch('/api/v1/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                doc_id: docId,
+                message: text,
+                history: chatHistory
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            removeTypingIndicator();
+            var aiText = data.response || "I couldn't process that.";
+            addChatMessage(aiText, 'ai');
+            chatHistory.push({role: 'assistant', content: aiText});
+        })
+        .catch(err => {
+            console.error("Chat error:", err);
+            removeTypingIndicator();
+            addChatMessage("Sorry, an error occurred while connecting to the AI.", 'ai');
+        });
+    }
+
+    // Tab switching for report panes
+    function switchReportTab(tab) {
+        var btns = document.querySelectorAll('.tab-container .tab-header .tab-nav-btn');
+        btns.forEach(function(btn) {
+            btn.classList.remove('active');
+            if (btn.getAttribute('onclick').includes(tab)) {
+                btn.classList.add('active');
             }
         });
 
-        // Highlight biased terms in original text (demo)
-        function highlightBiasedTerms() {
-            // This would be implemented in production
-            console.log('Highlighting biased terms');
+        var panes = document.querySelectorAll('.tab-container .tab-pane');
+        panes.forEach(function(pane) {
+            pane.classList.remove('active');
+            pane.style.display = 'none';
+        });
+        
+        var targetPane = tab === 'summary' ? 'repSummary' : (tab === 'bias' ? 'repBias' : (tab === 'entities' ? 'repEntities' : (tab === 'original' ? 'repOriginal' : 'repExports')));
+        var activePane = document.getElementById(targetPane);
+        if (activePane) {
+            activePane.classList.add('active');
+            activePane.style.display = 'block';
         }
-    </script>
-</body>
-</html>
+    }
+
+    function copySummaryText() {
+        var text = document.getElementById('summaryContentText').textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            var btn = document.getElementById('copySummaryBtnText');
+            btn.textContent = 'Copied!';
+            setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+        });
+    }
+
+    function copyRawDocumentText() {
+        var text = document.getElementById('rawDocumentContent').textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            var btn = document.getElementById('copyRawBtnText');
+            btn.textContent = 'Copied!';
+            setTimeout(() => { btn.textContent = 'Copy Raw Text'; }, 2000);
+        });
+    }
+    {% endif %}
+</script>
+{% endblock %}

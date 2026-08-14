@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LexAI - Legal Intelligence Platform{% endblock %}</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Base Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <i class="fas fa-scale-balanced"></i>
+                <span>LexAI</span>
+            </a>
+            
+            <div class="nav-links">
+                {% if session.get('user_id') %}
+                    <a href="/dashboard" class="{% if request.path == '/dashboard' %}active{% endif %}">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </a>
+                    <a href="/documents" class="{% if request.path == '/documents' %}active{% endif %}">
+                        <i class="fas fa-file-alt"></i> Library
+                    </a>
+                    <a href="/analytics" class="{% if request.path == '/analytics' %}active{% endif %}">
+                        <i class="fas fa-chart-pie"></i> Analytics
+                    </a>
+                    <a href="/help" class="{% if request.path == '/help' %}active{% endif %}">
+                        <i class="fas fa-question-circle"></i> Help
+                    </a>
+                    <a href="/settings" class="{% if request.path == '/settings' %}active{% endif %}">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                {% else %}
+                    <a href="/" class="{% if request.path == '/' %}active{% endif %}">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <a href="/login" class="btn btn-secondary" style="padding: 0.4rem 1.2rem;">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                    <a href="/register" class="btn btn-primary" style="padding: 0.4rem 1.2rem;">
+                        <i class="fas fa-user-plus"></i> Register
+                    </a>
+                {% endif %}
+            </div>
+
+            {% if session.get('user_id') %}
+                <div class="user-menu-wrapper" style="position: relative; display: inline-block;">
+                    <div class="user-menu" onclick="toggleDropdown()">
+                        <i class="fas fa-user-circle"></i>
+                        <span>{{ session.get('username', 'User') }}</span>
+                        <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+                    </div>
+                    <div id="userDropdown" class="glass-panel" style="display: none; position: absolute; right: 0; top: 45px; width: 180px; padding: 0.8rem; z-index: 1001; border-radius: var(--border-radius-md); background: rgba(14, 17, 24, 0.95);">
+                        <a href="/settings" style="display: flex; align-items: center; gap: 8px; color: var(--text-primary); text-decoration: none; padding: 0.5rem; font-size: 0.9rem; border-radius: var(--border-radius-sm); transition: var(--transition-smooth);" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
+                            <i class="fas fa-cog" style="color: var(--accent-gold);"></i> Account Settings
+                        </a>
+                        <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 0.4rem 0;">
+                        <a href="/logout" style="display: flex; align-items: center; gap: 8px; color: var(--color-error); text-decoration: none; padding: 0.5rem; font-size: 0.9rem; border-radius: var(--border-radius-sm); transition: var(--transition-smooth);" onmouseover="this.style.background='rgba(239, 68, 68, 0.05)'" onmouseout="this.style.background='transparent'">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Main Content Body -->
+    <div class="main-wrapper">
+        <!-- Flash Alert Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alerts-container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{% if category == 'error' %}error{% elif category == 'success' %}success{% else %}info{% endif %}">
+                            <i class="fas {% if category == 'error' %}fa-exclamation-circle{% elif category == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %}"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Core Javascript Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        function toggleDropdown() {
+            var dropdown = document.getElementById("userDropdown");
+            if (dropdown) {
+                dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+            }
+        }
+        
+        // Close dropdown when clicking outside
+        window.onclick = function(event) {
+            if (!event.target.closest('.user-menu-wrapper')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var dropdown = document.getElementById("userDropdown");
+                if (dropdown) {
+                    dropdown.style.display = "none";
+                }
+            }
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

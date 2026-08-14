@@ -1,0 +1,95 @@
+INDEPENDENT CONTRACTOR SERVICES AGREEMENT
+
+This Independent Contractor Services Agreement ("Agreement") is made effective as of August 14, 2026, by and between Zenith Software Solutions Inc., a Delaware corporation with offices at 450 Market Street, San Francisco, California 94105 ("Client"), and the undersigned contractor ("Contractor").
+
+CONTRACTOR INFORMATION & IDENTIFICATION (PII Verification)
+
+For billing, verification, and background audit purposes:
+
+* Contractor Name: Johnathan Harris (Email: j.harris@coderteam.io)
+* Contractor Contact: 312-555-0144
+* Private ID Reference (SSN): 000-44-8899
+* Direct Settlement Account (Credit Card): 4111-2222-3333-4444
+* Emergency Contact: Maria Santos (Email: maria.santos@gmail.com, Phone: 415-555-9821)
+
+SECTION 1: SCOPE OF SERVICES & SUITABILITY
+
+The Contractor will provide software development services including but not limited to backend engineering, API development, and cloud infrastructure management. The total compensation for services rendered shall be $85,000 USD per annum, payable in monthly installments of $7,083.33 USD.
+
+We seek an energetic, fresh graduate who is young and unburdened by family responsibilities. Because the developer will work in a fast-paced environment, we require someone who does not exhibit hysterical or emotional reactions when code reviews are critical. We also prefer candidates from traditional suburban backgrounds who can adapt to our corporate culture without difficulty.
+
+The ideal candidate should be adaptable and young, preferably a digital native who understands modern technology intuitively. Older applicants or those who are overqualified may not fit our corporate culture. Candidates who are wheelchair-bound or suffer from any condition requiring special accommodations should disclose this during the application phase.
+
+SECTION 2: CONFIDENTIALITY & NON-DISCLOSURE
+
+During the term of this Agreement and for a period of three (3) years following its termination, the Contractor shall not disclose, publish, or otherwise disseminate any Confidential Information of the Client. "Confidential Information" means all non-public information relating to Client's business, including but not limited to trade secrets, customer lists, financial data, proprietary algorithms, and strategic plans.
+
+The Contractor acknowledges that any breach of this confidentiality clause may result in irreparable damages to the Client, and the Client shall be entitled to seek injunctive relief in addition to any other remedies available at law or in equity.
+
+SECTION 3: INTELLECTUAL PROPERTY RIGHTS
+
+All work product, inventions, discoveries, and intellectual property created by the Contractor during the performance of services under this Agreement shall be the sole and exclusive property of the Client. The Contractor hereby assigns all rights, title, and interest in and to such intellectual property to the Client.
+
+The Contractor shall execute any documents reasonably requested by the Client to perfect the Client's ownership of such intellectual property, including patent applications, copyright registrations, and trademark filings.
+
+SECTION 4: NON-COMPETE & NON-SOLICITATION
+
+For a period of twenty-four (24) months following the termination of this Agreement, the Contractor agrees:
+
+(a) Not to engage in any business that directly competes with the Client within the states of California, New York, Texas, and Illinois;
+(b) Not to solicit any employees, contractors, or customers of the Client for any competing enterprise;
+(c) Not to use any proprietary methods or trade secrets gained during this engagement.
+
+Violation of this non-compete clause shall result in liquidated damages of $250,000 USD, plus reasonable attorneys' fees and court costs.
+
+SECTION 5: LIMITATION OF LIABILITY & INDEMNIFICATION
+
+In no event shall the total aggregate liability of either party exceed $500,000 USD. Neither party shall be liable for any indirect, incidental, consequential, special, or exemplary damages, including but not limited to loss of profits, loss of data, or business interruption, regardless of the theory of liability.
+
+The Contractor shall indemnify, defend, and hold harmless the Client from and against any and all claims, damages, losses, liabilities, and expenses (including reasonable attorneys' fees) arising from the Contractor's negligence, willful misconduct, or breach of this Agreement.
+
+SECTION 6: DISPUTE RESOLUTION & GOVERNING LAW
+
+This Agreement shall be governed by and construed in accordance with the laws of the State of California, without regard to its conflicts of law principles. Any disputes arising under this Agreement shall first be submitted to mediation administered by the American Arbitration Association. If mediation fails to resolve the dispute within sixty (60) days, either party may pursue binding arbitration in San Francisco County, California.
+
+The prevailing party in any arbitration or litigation shall be entitled to recover reasonable attorneys' fees and costs from the non-prevailing party.
+
+SECTION 7: TERMINATION
+
+Either party may terminate this Agreement:
+(a) With thirty (30) days' written notice to the other party;
+(b) Immediately upon material breach by the other party, subject to a fifteen (15) day cure period;
+(c) Immediately in the event of bankruptcy, insolvency, or assignment for the benefit of creditors.
+
+Upon termination, the Contractor shall return all Client property, Confidential Information, and work product within ten (10) business days.
+
+SECTION 8: FORCE MAJEURE
+
+Neither party shall be liable for any failure or delay in performance due to circumstances beyond its reasonable control, including but not limited to acts of God, natural disasters, pandemics, government actions, war, terrorism, or civil unrest.
+
+SECTION 9: GENERAL PROVISIONS
+
+(a) Entire Agreement: This Agreement constitutes the entire agreement between the parties and supersedes all prior negotiations, representations, and agreements.
+(b) Amendment: No amendment or modification shall be effective unless made in writing and signed by both parties.
+(c) Severability: If any provision is found to be unenforceable, the remaining provisions shall continue in full force and effect.
+(d) Waiver: The failure to enforce any provision shall not constitute a waiver of future enforcement.
+(e) Assignment: Neither party may assign this Agreement without the prior written consent of the other party.
+(f) Notices: All notices shall be sent to the addresses listed above via certified mail or email.
+(g) Counterparts: This Agreement may be executed in counterparts, each of which shall be deemed an original.
+(h) Headings: Section headings are for convenience only and do not affect interpretation.
+(i) Survival: Sections 2, 3, 4, 5, and 6 shall survive termination of this Agreement.
+
+IN WITNESS WHEREOF, the parties have executed this Agreement as of the date first written above.
+
+CLIENT: Zenith Software Solutions Inc.
+By: Dr. Rebecca Chen, Chief Executive Officer
+Date: August 14, 2026
+
+CONTRACTOR:
+By: Johnathan Harris
+Date: August 14, 2026
+
+WITNESS:
+By: Michael Rodriguez, Legal Counsel
+Thompson & Associates LLP
+500 Broadway, New York, NY 10012

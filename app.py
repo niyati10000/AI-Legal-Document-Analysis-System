@@ -1,6 +1,16 @@
 import os
 import sys
 from dotenv import load_dotenv; load_dotenv()
+
+# If executed via Streamlit Cloud (or 'streamlit run app.py'), delegate to streamlit_app.py
+try:
+    import streamlit as st
+    if st.runtime.exists():
+        import streamlit_app
+        sys.exit(0)
+except Exception:
+    pass
+
 from flask import Flask, render_template, redirect, url_for, session, make_response
 from database import db, LegalDocument
 from config import config_by_name

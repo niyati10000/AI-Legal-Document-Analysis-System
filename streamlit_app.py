@@ -15,7 +15,7 @@ st.set_page_config(
 )
 
 # Custom CSS for Apple Frosted Acrylic & Clean Light Aesthetics
-st.markdown("""
+st.html("""
 <style>
     /* Global Font & Canvas */
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
@@ -125,7 +125,7 @@ st.markdown("""
         color: #065f46;
     }
 </style>
-""", unsafe_allow_html=True)
+""")
 
 # ----------------- Helper Functions -----------------
 def extract_text_from_file(uploaded_file):
@@ -209,12 +209,12 @@ with st.sidebar:
     st.caption("LexAI Legal Intelligence Platform • v2.5")
 
 # ----------------- Main Hero Header -----------------
-st.markdown("""
+st.html("""
 <div class="hero-banner">
     <div class="hero-title">⚖️ LexAI Legal Intelligence</div>
     <p class="hero-subtitle">Automated contract review, 5-category bias auditing, and interactive legal clause assistant.</p>
 </div>
-""", unsafe_allow_html=True)
+""")
 
 # ----------------- Document Input Section -----------------
 tab_upload, tab_paste, tab_sample = st.tabs(["📁 Upload Document", "✍️ Paste Text", "📄 Load Sample Agreement"])

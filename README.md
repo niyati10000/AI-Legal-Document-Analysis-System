@@ -2,100 +2,18 @@
 
 > **AI-Powered Contract Review, Bias Auditing, and Legal Risk Intelligence**
 
-[![Python Version](https://img.shields.io/badge/Python-3.13%2B-blue.svg)](https://python.org)
-[![Flask Version](https://img.shields.io/badge/Flask-3.1.2-lightgrey.svg)](https://flask.palletsprojects.com/)
-[![AI Engine](https://img.shields.io/badge/AI-Google%20Gemini%203.5%20Flash-orange.svg)](https://aistudio.google.com/)
-[![Design System](https://img.shields.io/badge/Design-Apple%20VisionOS%20%26%20Porcelain%20Acrylic-cyan.svg)](#)
+[![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://python.org)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.35%2B-red.svg)](https://streamlit.io)
+[![AI Engine](https://img.shields.io/badge/AI-Google%20Gemini-orange.svg)](https://aistudio.google.com/)
 [![Tests](https://img.shields.io/badge/Tests-11%20Passed-brightgreen.svg)](#)
 
-**LexAI** is an artificial intelligence platform designed to automate the analysis, summarization, and bias auditing of complex legal agreements, contracts, court judgments, and policy documents. Built with a **hybrid AI pipeline** (Google Gemini 3.5 Flash + deterministic rule fallback) and wrapped in an **Apple Frosted Porcelain Acrylic UI**, LexAI delivers clause-by-clause legal risk assessments, protected-class discrimination checks (EEOC / Civil Rights), interactive document chatting, and full-spectrum analytics.
+**LexAI** is an artificial intelligence platform designed to automate the analysis, summarization, and bias auditing of complex legal agreements, contracts, court judgments, and policy documents. Built with a **hybrid AI pipeline** (Google Gemini + deterministic rule fallback) and wrapped in an **Apple Frosted Acrylic UI**, LexAI delivers clause-by-clause legal risk assessments, protected-class discrimination checks (EEOC / Civil Rights), interactive document chatting, and full-spectrum analytics.
 
 ---
 
-## 📸 Key Features & Capabilities
+## 🚀 Quick Start (Streamlit)
 
-### 1. 🤖 Document Intelligence & "Ask LexAI" Chatbot
-* **Structured Clause Synthesis**: Generates explanatory, clause-by-clause summaries categorizing parties, indemnification thresholds, termination conditions, and payment schedules.
-* **Document Chatbot (`Ask LexAI`)**: In-session legal assistant that answers ad-hoc questions against uploaded documents, cites specific clauses, calculates liabilities, and proposes neutral amendments.
-* **Interactive Document Annotator**: Real-time monospace text inspector with color-coded entity chips and clause flags.
-
-### 2. 🛡️ Comprehensive Bias & Compliance Auditing
-* **5 Protected-Class Audits**: Scans documents for subtle, overt, or systemic bias across **Gender**, **Racial/Ethnic**, **Age**, **Disability**, and **Socioeconomic** dimensions.
-* **EEOC / Civil Rights Verification**: Gauges compliance against standard anti-discrimination statutes.
-* **Neutral Remediation Engine**: Pinpoints biased contract language, assigns risk severity (Low / Medium / High), and outputs legally sound remediation recommendations.
-
-### 3. 🔒 Privacy & Automated PII Masking
-* **Confidentiality Pre-Processing**: Automatically detects and masks sensitive Personally Identifiable Information (SSNs, credit card numbers, personal emails, phone numbers, individual names) before transmitting data.
-* **Audit Trail**: Cryptographically logs every document scan, download, and modification with timestamp and IP address.
-
-### 4. 🎨 Apple VisionOS & macOS Porcelain Design System
-* **Porcelain Acrylic Glassmorphism**: Clean light-mode aesthetic with soft aurora glows, high-contrast typography, and fluid responsive grids.
-* **Interactive Profile & Master-Detail Settings**: Profile management modal, customizable AI models (Gemini 3.5 Flash vs Pro vs Local), legal domain presets, and downloadable CSV audit logs.
-* **REST API & In-Browser Playground**: Integrated developer console to test live API payloads directly within the browser.
-
----
-
-## 🛠️ Technology Stack
-
-| Layer | Technologies |
-|---|---|
-| **Backend** | Python 3.13, Flask 3.1.2, Flask-SQLAlchemy (ORM), Werkzeug |
-| **AI / NLP** | Google Gemini 3.5 Flash (`google-genai`), Regex-NER, Keyword Frequency Fallback |
-| **Document Parsers** | `pypdf` (PDF Parsing), `python-docx` (Word Documents), `txt` |
-| **Frontend** | Vanilla HTML5 / ES6 JavaScript, Apple Frosted Porcelain CSS, Chart.js |
-| **Security** | `scrypt` password hashing, `SHA-256` hashed API Tokens, PII sanitization |
-| **Database** | SQLite (Dev) / PostgreSQL compatible (Production) |
-
----
-
-## 📂 Project Architecture
-
-```
-Legal_bais/
-├── app.py                      # Flask Server Bootstrapper & DB Seeding
-├── config.py                   # Environment & Database Configuration
-├── database.py                 # SQLAlchemy ORM Models (User, Document, AuditLog)
-├── requirements.txt            # Python Dependencies
-├── .env                        # Gemini API Key & Environment Secrets
-│
-├── blueprints/                 # Modular Route Controllers
-│   ├── auth.py                 # User Login, Registration & Session Handling
-│   ├── dashboard.py            # Dashboard, Library & Analytics Pages
-│   ├── settings.py             # Settings, Profile Modal, API Key Management & CSV Export
-│   └── api.py                  # REST API v1 Endpoints & Chatbot Service
-│
-├── services/                   # Business Logic & Background Workers
-│   ├── ai_service.py           # Gemini 3.5 Flash Analyzer & Fallback Engine
-│   ├── file_service.py         # PDF, DOCX, and TXT Extraction
-│   └── worker.py               # Asynchronous Multi-threaded Queue Worker
-│
-├── static/                     # Assets & Styling
-│   ├── css/theme.css           # Apple Porcelain Acrylic Design System
-│   └── js/                     # Client-side scripts & live polling
-│
-├── templates/                  # Jinja2 Layout Templates
-│   ├── base.html               # Master Acrylic Navigation Layout
-│   ├── dashboard.html          # Bento Analytics Dashboard
-│   ├── analysis.html           # Full Tabbed Report & "Ask LexAI" Chatbot
-│   ├── settings.html           # Master-Detail Settings & REST Playground
-│   ├── documents.html          # Document Library & Filtering
-│   ├── analytics.html          # System KPIs & Bias Distribution Charts
-│   └── upload.html             # Drag-and-Drop / Paste Document Upload
-│
-├── test_documents/             # Comprehensive Test Files
-│   └── full_test_contract.txt  # Multi-category Bias & PII Verification Contract
-└── tests/                      # Automated Pytest Suite (11 Tests)
-```
-
----
-
-## ⚡ Quick Start Guide
-
-### 1. Prerequisites
-* Python 3.10+ (Recommended Python 3.13)
-* `git`
-
-### 2. Installation
+### 1. Installation
 ```bash
 # Clone the repository
 git clone https://github.com/niyati10000/AI-Legal-Document-Analysis-System.git
@@ -113,59 +31,84 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 3. Configure Environment
-Create a `.env` file in the root directory:
+### 2. Configure Gemini API Key
+Create a `.env` file in the root directory (or `.streamlit/secrets.toml`):
 ```ini
-FLASK_ENV=dev
-SECRET_KEY=your-secure-secret-key-here
 GEMINI_API_KEY=your-gemini-api-key-here
 ```
 
-### 4. Run the Application
+### 3. Run Streamlit App
 ```bash
-python app.py
+streamlit run streamlit_app.py
 ```
-Open your browser and navigate to: **[http://127.0.0.1:5000](http://127.0.0.1:5000)**
+Open your browser to the URL displayed in your terminal (typically `http://localhost:8501`).
 
-### 5. Default Demo Credentials
-| Field | Value |
+---
+
+## ☁️ Deploying to Streamlit Community Cloud
+
+1. **Push your code to GitHub** (Ensure `streamlit_app.py`, `requirements.txt`, and `.streamlit/config.toml` are present).
+2. Go to **[share.streamlit.io](https://share.streamlit.io)** and log in with your GitHub account.
+3. Click **New App**, select your repository, branch (`main`), and set Main file path to:
+   ```text
+   streamlit_app.py
+   ```
+4. Under **Advanced settings... -> Secrets**, add your Gemini API key:
+   ```toml
+   GEMINI_API_KEY = "your-google-gemini-api-key-here"
+   ```
+5. Click **Deploy!**
+
+---
+
+## 📸 Key Features & Capabilities
+
+### 1. 🤖 Document Intelligence & Legal Chatbot
+* **Structured Clause Synthesis**: Generates explanatory, clause-by-clause summaries categorizing parties, indemnification thresholds, termination conditions, and payment schedules.
+* **Interactive Document Chat**: In-session legal assistant that answers ad-hoc questions against uploaded documents, cites specific clauses, and proposes neutral amendments.
+
+### 2. 🛡️ Comprehensive Bias & Compliance Auditing
+* **5 Protected-Class Audits**: Scans documents for subtle, overt, or systemic bias across **Gender**, **Racial/Ethnic**, **Age**, **Disability**, and **Socioeconomic** dimensions.
+* **EEOC / Civil Rights Verification**: Gauges compliance against standard anti-discrimination statutes.
+* **Neutral Remediation Engine**: Pinpoints biased contract language, assigns risk severity (Low / Medium / High), and outputs legally sound remediation recommendations.
+
+### 3. 🔒 Privacy & Automated PII Masking
+* **Confidentiality Pre-Processing**: Automatically detects and masks sensitive Personally Identifiable Information (SSNs, credit card numbers, personal emails, phone numbers) before transmitting data.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technologies |
 |---|---|
-| **Email** | `demo@lexai.com` |
-| **Password** | `demo123` |
+| **App Framework** | Streamlit (Python 3.10+) |
+| **Backend / Web Server** | Python 3.13, Flask (Optional local API server) |
+| **AI / NLP** | Google Gemini (`google-genai`), Regex-NER, Keyword Frequency Fallback |
+| **Document Parsers** | `pypdf` (PDF Parsing), `python-docx` (Word Documents), `txt` |
+| **Frontend Styling** | Apple Frosted Acrylic & Clean Light CSS Design System |
 
 ---
 
-## 🧪 Running Automated Tests
+## 📂 Project Architecture
 
-Run the full pytest test suite:
-```bash
-pytest -v
 ```
-All 11 unit & integration tests verify authentication, API key validation, version diffing, document parsing, and analysis page rendering.
-
----
-
-## 🌐 REST API Endpoints
-
-### 1. Analyze Document
-`POST /api/v1/analyze` (Multipart Form Data)
-* **Headers**: `Authorization: Bearer <API_KEY>`
-* **Parameters**: `title`, `content` (or `file`), `analysis_type` (`both|summarize|bias`), `summary_length` (`short|medium|detailed`), `pii_masking` (`true|false`).
-
-### 2. Ask LexAI Chatbot
-`POST /api/v1/chat` (JSON)
-* **Payload**:
-```json
-{
-  "doc_id": 1,
-  "message": "What is the non-compete duration in this contract?",
-  "history": []
-}
+Legal_bais/
+├── streamlit_app.py            # Streamlit Application Entrypoint
+├── requirements.txt            # Python Dependencies
+├── .env                        # Local Environment Secrets
+├── .streamlit/
+│   ├── config.toml             # Streamlit Theme & Server Settings
+│   └── secrets.toml.example    # Streamlit Secrets Template
+│
+├── services/                   # Business Logic & AI Pipeline
+│   ├── ai_service.py           # Gemini Analyzer & Fallback Engine
+│   ├── file_service.py         # PDF, DOCX, and TXT Extraction
+│   └── worker.py               # Background Task Queue
+│
+├── test_documents/             # Test Files for Verification
+│   └── full_test_contract.txt  # Multi-category Bias & PII Contract
+└── tests/                      # Automated Pytest Suite
 ```
-
-### 3. Export Audit Trail
-`GET /settings/export-audit-log`
-* Downloads a CSV of all user activity and document actions.
 
 ---
 

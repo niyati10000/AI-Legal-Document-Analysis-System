@@ -2,13 +2,9 @@ Flask==3.1.2
 Flask-WTF==1.2.2
 Werkzeug==3.1.5
 python-dotenv==1.2.1
-gunicorn==21.2.0
-transformers==4.36.0
-torch==2.10.0
-torchvision==0.25.0
-torchaudio==2.10.0
-sentencepiece==0.2.1
-sacremoses==0.1.1
 google-genai==1.65.0
 pandas==2.3.3
 numpy==2.4.2
+pypdf>=5.0.0
+python-docx>=1.1.0
+streamlit>=1.35.0

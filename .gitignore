@@ -53,6 +53,3 @@ uploads/
 
 # Logs
 *.log
-
-# Streamlit secrets
-.streamlit/secrets.toml

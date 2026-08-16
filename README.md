@@ -10,6 +10,8 @@
 **LexAI** is an artificial intelligence platform designed to automate the analysis, summarization, and bias auditing of complex legal agreements, contracts, court judgments, and policy documents. Built with a **hybrid AI pipeline** (Google Gemini + deterministic rule fallback) and an interactive web interface, LexAI delivers clause-by-clause legal risk assessments, protected-class discrimination checks (EEOC / Civil Rights), interactive document chatting, and full-spectrum analytics.
 
 ---
+**Hostedlink**
+https://niyati1.pythonanywhere.com/
 
 ## 🚀 Quick Start (Flask)
 

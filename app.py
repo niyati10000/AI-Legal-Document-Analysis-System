@@ -6,8 +6,10 @@ from dotenv import load_dotenv; load_dotenv()
 try:
     import streamlit as st
     if st.runtime.exists():
-        import streamlit_app
-        sys.exit(0)
+        with open(os.path.join(os.path.dirname(__file__), "streamlit_app.py"), "r", encoding="utf-8") as _f:
+            exec(_f.read())
+        # Stop further Flask execution in Streamlit thread
+        st.stop()
 except Exception:
     pass
 

@@ -2,17 +2,6 @@ import os
 import sys
 from dotenv import load_dotenv; load_dotenv()
 
-# If executed via Streamlit Cloud (or 'streamlit run app.py'), delegate to streamlit_app.py
-try:
-    import streamlit as st
-    if st.runtime.exists():
-        with open(os.path.join(os.path.dirname(__file__), "streamlit_app.py"), "r", encoding="utf-8") as _f:
-            exec(_f.read())
-        # Stop further Flask execution in Streamlit thread
-        st.stop()
-except Exception:
-    pass
-
 from flask import Flask, render_template, redirect, url_for, session, make_response
 from database import db, LegalDocument
 from config import config_by_name

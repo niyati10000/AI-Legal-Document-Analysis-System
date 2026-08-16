@@ -3,15 +3,15 @@
 > **AI-Powered Contract Review, Bias Auditing, and Legal Risk Intelligence**
 
 [![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://python.org)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.35%2B-red.svg)](https://streamlit.io)
+[![Framework](https://img.shields.io/badge/Framework-Flask%203.1-green.svg)](https://flask.palletsprojects.com)
 [![AI Engine](https://img.shields.io/badge/AI-Google%20Gemini-orange.svg)](https://aistudio.google.com/)
 [![Tests](https://img.shields.io/badge/Tests-11%20Passed-brightgreen.svg)](#)
 
-**LexAI** is an artificial intelligence platform designed to automate the analysis, summarization, and bias auditing of complex legal agreements, contracts, court judgments, and policy documents. Built with a **hybrid AI pipeline** (Google Gemini + deterministic rule fallback) and wrapped in an **Apple Frosted Acrylic UI**, LexAI delivers clause-by-clause legal risk assessments, protected-class discrimination checks (EEOC / Civil Rights), interactive document chatting, and full-spectrum analytics.
+**LexAI** is an artificial intelligence platform designed to automate the analysis, summarization, and bias auditing of complex legal agreements, contracts, court judgments, and policy documents. Built with a **hybrid AI pipeline** (Google Gemini + deterministic rule fallback) and an interactive web interface, LexAI delivers clause-by-clause legal risk assessments, protected-class discrimination checks (EEOC / Civil Rights), interactive document chatting, and full-spectrum analytics.
 
 ---
 
-## 🚀 Quick Start (Streamlit)
+## 🚀 Quick Start (Flask)
 
 ### 1. Installation
 ```bash
@@ -31,33 +31,18 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Configure Gemini API Key
-Create a `.env` file in the root directory (or `.streamlit/secrets.toml`):
+### 2. Configure Environment Variables
+Create a `.env` file in the root directory:
 ```ini
 GEMINI_API_KEY=your-gemini-api-key-here
+FLASK_SECRET_KEY=your-secret-key
 ```
 
-### 3. Run Streamlit App
+### 3. Run Application
 ```bash
-streamlit run streamlit_app.py
+python app.py
 ```
-Open your browser to the URL displayed in your terminal (typically `http://localhost:8501`).
-
----
-
-## ☁️ Deploying to Streamlit Community Cloud
-
-1. **Push your code to GitHub** (Ensure `streamlit_app.py`, `requirements.txt`, and `.streamlit/config.toml` are present).
-2. Go to **[share.streamlit.io](https://share.streamlit.io)** and log in with your GitHub account.
-3. Click **New App**, select your repository, branch (`main`), and set Main file path to:
-   ```text
-   streamlit_app.py
-   ```
-4. Under **Advanced settings... -> Secrets**, add your Gemini API key:
-   ```toml
-   GEMINI_API_KEY = "your-google-gemini-api-key-here"
-   ```
-5. Click **Deploy!**
+Open your browser to `http://localhost:5000`.
 
 ---
 
@@ -81,11 +66,11 @@ Open your browser to the URL displayed in your terminal (typically `http://local
 
 | Layer | Technologies |
 |---|---|
-| **App Framework** | Streamlit (Python 3.10+) |
-| **Backend / Web Server** | Python 3.13, Flask (Optional local API server) |
+| **App Framework** | Flask 3.1, Jinja2 Templates |
+| **Database** | Flask-SQLAlchemy (SQLite / PostgreSQL) |
+| **WSGI Server** | Gunicorn (Production), Werkzeug (Development) |
 | **AI / NLP** | Google Gemini (`google-genai`), Regex-NER, Keyword Frequency Fallback |
 | **Document Parsers** | `pypdf` (PDF Parsing), `python-docx` (Word Documents), `txt` |
-| **Frontend Styling** | Apple Frosted Acrylic & Clean Light CSS Design System |
 
 ---
 
@@ -93,20 +78,26 @@ Open your browser to the URL displayed in your terminal (typically `http://local
 
 ```
 Legal_bais/
-├── streamlit_app.py            # Streamlit Application Entrypoint
+├── app.py                      # Flask Application Entrypoint
+├── config.py                   # Application Configurations
+├── database.py                 # SQLAlchemy Database Models
 ├── requirements.txt            # Python Dependencies
 ├── .env                        # Local Environment Secrets
-├── .streamlit/
-│   ├── config.toml             # Streamlit Theme & Server Settings
-│   └── secrets.toml.example    # Streamlit Secrets Template
+│
+├── blueprints/                 # Flask Blueprints & Controllers
+│   ├── api.py                  # API Endpoints
+│   ├── auth.py                 # Authentication Routes
+│   ├── dashboard.py            # Main Dashboard & Document Views
+│   └── settings.py             # User Settings & API Configuration
 │
 ├── services/                   # Business Logic & AI Pipeline
 │   ├── ai_service.py           # Gemini Analyzer & Fallback Engine
 │   ├── file_service.py         # PDF, DOCX, and TXT Extraction
 │   └── worker.py               # Background Task Queue
 │
+├── static/                     # CSS, JS, and Asset Files
+├── templates/                  # HTML Templates (Jinja2)
 ├── test_documents/             # Test Files for Verification
-│   └── full_test_contract.txt  # Multi-category Bias & PII Contract
 └── tests/                      # Automated Pytest Suite
 ```
 

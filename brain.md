@@ -1,90 +1,145 @@
-# 🧠 LexAI - Architecture & Developer Context Brain
+# 🧠 LexAI - Master System Context & Architecture Brain
 
-This document serves as the master developer context ledger for **LexAI**. It captures the system architecture, design decisions, data models, AI pipeline strategies, and API contracts for AI agents and human contributors.
-
----
-
-## ⚖️ 1. Platform Overview
-**LexAI** is an AI-powered Legal Intelligence and Compliance Auditing platform. Its mission is to streamline legal document parsing, detect protected-class discrimination and bias in agreements (Gender, Race, Age, Disability, Socioeconomic), and provide conversational intelligence ("Ask LexAI") over complex legal contracts.
+> **Comprehensive Developer & AI Context Manual**  
+> *Pass this document to any AI model or developer for instant, complete understanding of the LexAI codebase.*
 
 ---
 
-## 🏗️ 2. Architectural Blueprint
+## ⚡ Quick AI Context & Summary
+- **App Type:** AI-powered Legal Document Intelligence, Contract Review, and Protected-Class Bias Auditing Platform.
+- **Backend Framework:** Python 3.10+ with Flask 3.1, Jinja2 Templates, SQLAlchemy ORM, and Gunicorn (Production WSGI).
+- **AI & NLP Pipeline:** 
+  1. **Primary Cloud LLM:** Google Gemini (`google-genai` SDK) for structured clause extraction, risk assessment, and interactive document chat.
+  2. **Local Hugging Face Pipelines:** Lazy-loaded `facebook/bart-large-cnn` (Summarization), `dslim/bert-base-NER` (Entity Recognition), and `unitary/toxic-bert` (Bias Classification).
+  3. **Deterministic Fallback:** Keyword scoring, regex NER, and rule-based protected-class bias matcher (Gender, Race, Age, Disability, Socioeconomic).
+  4. **Privacy:** Automated PII masking (SSN, credit card, phone, email) before transmitting text to external AI services.
+- **Database:** SQLite (default) / PostgreSQL via `Flask-SQLAlchemy`. Auto-initializes and seeds demo account `demo@lexai.com` / `demo123`.
+- **Frontend & Design:** Custom Apple Porcelain Frosted Glass & Bento-Grid UI System (`static/css/theme.css`, `templates/`).
 
-### Layer Breakdown:
-```mermaid
-graph TD
-    Client[Web Browser / REST Client] --> Flask[Flask Web Application (Blueprints)]
-    Flask --> Auth[auth_bp - Scrypt Auth & Sessions]
-    Flask --> Dash[dashboard_bp - Dashboard, Library, Analytics]
-    Flask --> Settings[settings_bp - Profile, Engine & Keys]
-    Flask --> API[api_bp - REST v1 & Chatbot Service]
-    
-    Flask --> DB[(SQLite / PostgreSQL ORM)]
-    Flask --> Worker[Background Worker Thread (Queue)]
-    Worker --> AIService[services/ai_service.py]
-    AIService --> Gemini[Google Gemini 3.5 Flash]
-    AIService --> Fallback[Deterministic Rule Engine / Regex NER]
+---
+
+## 📂 Codebase File Structure & Responsibilities
+
+```
+Legal_bais/
+├── app.py                      # Flask App initialization, global routes, error handlers, DB seeding, entry point
+├── config.py                   # Environment configurations (DevConfig, ProdConfig, TestConfig)
+├── database.py                 # SQLAlchemy ORM Data Models (User, LegalDocument, BiasReport, Summary, etc.)
+├── requirements.txt            # Python dependencies (Flask, google-genai, gunicorn, pypdf, python-docx, etc.)
+├── brain.md                    # Master AI Architecture & Developer Context Manual (This File)
+├── README.md                   # User-facing installation and setup documentation
+├── .env                        # Local environment variables (GEMINI_API_KEY, FLASK_SECRET_KEY)
+│
+├── blueprints/                 # Flask Modular Controllers & Route Handlers
+│   ├── auth.py                 # Login, Registration, Logout, Password Hashing (scrypt)
+│   ├── dashboard.py            # Upload, Document Details, Library, Analytics, Export, PDF Generation
+│   ├── settings.py             # User Profile, AI Engine selection, API Key generation, Audit Logs
+│   └── api.py                  # Public REST v1 endpoints & Interactive Document Chat API
+│
+├── services/                   # Business Logic & NLP Engines
+│   ├── ai_service.py           # Gemini API Client, Hugging Face Transformers, Fallback Rule Engine, PII Sanitizer
+│   ├── file_service.py         # File extraction (PDF via pypdf, DOCX via python-docx, TXT)
+│   └── worker.py               # Background async document processing thread queue
+│
+├── static/                     # Assets & Custom Stylesheets
+│   ├── css/theme.css           # Apple Porcelain Frosted Acrylic Design Tokens & Responsive Bento Grid
+│   └── js/main.js              # Client-side interaction & async REST handlers
+│
+├── templates/                  # Jinja2 HTML View Templates
+│   ├── base.html               # Base layout with navbar and sidebar navigation
+│   ├── index.html              # Landing page
+│   ├── dashboard.html           # Document processing status & analytics summary
+│   ├── document_detail.html    # Full clause summary, bias report, entity tags, & live AI chatbot
+│   ├── library.html            # Document archive with search & filtering
+│   ├── analytics.html          # Global legal bias & risk analytics dashboard
+│   ├── settings.html           # API keys, profile management, and audit log exports
+│   ├── login.html / register.html # Authentication templates
+│   └── 404.html / 500.html     # Custom error pages
+│
+├── test_documents/             # Test contracts for validation
+│   └── full_test_contract.txt  # Multi-category contract sample with bias and PII data
+└── tests/                      # Automated Test Suite (Pytest)
+    ├── test_api.py             # REST API endpoint tests
+    └── test_auth.py            # Authentication & session tests
 ```
 
 ---
 
-## 🗄️ 3. Database Schema (SQLAlchemy ORM)
+## 🏗️ System Architecture & Data Flow
 
-| Model | Table | Description |
-|---|---|---|
-| **`User`** | `users` | User accounts with email, scrypt `password_hash`, `full_name`, `role`, `bio`, and `organization`. |
-| **`UserSetting`** | `user_settings` | Per-user preferences: `default_summary_length`, `bias_threshold`, `pii_masking_enabled`, `ai_model`, `legal_domain`. |
-| **`LegalDocument`** | `legal_documents` | Parent document entity tracking `title`, `doc_type`, and processing lifecycle status (`queued`, `extracting`, `analyzing`, `completed`, `failed`). |
-| **`DocumentVersion`** | `document_versions` | Versioned textual revisions allowing revision tracking and diff comparisons. |
-| **`Summary`** | `summaries` | AI generated structured legal summary and provisions breakdown. |
-| **`BiasReport`** | `bias_reports` | Overall bias score, primary category, per-class breakdown (Gender, Racial, Age, Disability, Socioeconomic), and neutral remediation flags. |
-| **`Entity`** | `entities` | Named entities extracted from text (People, Organizations, Locations, Dates, Monetary Amounts, Legal Terms). |
-| **`ApiKey`** | `api_keys` | Developer authentication tokens stored as one-way `SHA-256` hashes with usage timestamps. |
-| **`AuditLog`** | `audit_logs` | Compliance log tracking all user actions (`LOGIN`, `UPLOAD`, `UPDATE_PROFILE`, `API_KEY_GEN`, etc.) with IP and timestamps. |
-| **`Tag` & `DocumentTag`** | `tags` / `document_tags` | Many-to-many relationship supporting customized tags. |
-
----
-
-## 🤖 4. AI & NLP Pipeline Architecture
-
-### Primary Engine: Google Gemini 3.5 Flash
-* **Model Designation**: `gemini-3.5-flash`
-* **JSON Schema Extraction**: Enforces structured JSON output containing `key_provisions`, `parties`, `monetary_terms`, `compliance_status`, and `flags` with specific remediation text.
-* **Document Chat (`POST /api/v1/chat`)**: Injects the full document context, latest summary, and conversation history buffer (up to 6 turns) into the prompt context for precise clause citation.
-
-### Secondary Engine: Deterministic Fallback Analyzer
-* **Summarization**: Extractive sentence ranker scoring sentences by legal keyword density, monetary values, dates, and named entity presence.
-* **Bias Detection**: Multi-category weighted phrase-matcher (e.g. `aggressive woman`, `digital native`, `wheelchair-bound`, `inner-city`) with zero false-random inflation.
-* **Entity Extraction**: Context-aware regex extraction for parties, dates, monetary values, and US locations.
-
-### Privacy & PII Sanitizer
-* Automatically redacts SSNs (`XXX-XX-XXXX`), credit card numbers, phone numbers, and email addresses before invoking external LLM APIs.
+```mermaid
+graph TD
+    User[User / Web Client] --> Flask[Flask Application]
+    Flask --> Auth[auth_bp - Session & Auth]
+    Flask --> Dash[dashboard_bp - UI Views & Uploads]
+    Flask --> Settings[settings_bp - User Settings & API Keys]
+    Flask --> API[api_bp - REST v1 & Chatbot API]
+    
+    Flask --> DB[(SQLAlchemy ORM - SQLite / Postgres)]
+    Dash --> WorkerQueue[Background Worker Queue (worker.py)]
+    WorkerQueue --> FileService[file_service.py - Text Extraction]
+    WorkerQueue --> AIService[ai_service.py - NLP Engine]
+    
+    AIService --> PII[PII Sanitizer Engine]
+    PII --> Gemini[Google Gemini API]
+    PII --> LocalHF[Local Transformers - BART/BERT]
+    PII --> RuleFallback[Deterministic Keyword & Regex Fallback]
+```
 
 ---
 
-## 🎨 5. Apple Porcelain Design System (`static/css/theme.css`)
+## 🗄️ Database Schema Summary (`database.py`)
 
-* **Color Tokens**:
-  * Canvas: `#f8fafc` with subtle pastel aurora gradients (`#fed7aa`, `#fbcfe8`, `#e9d5ff`, `#bfdbfe`).
-  * Surface: Pure White Frosted Porcelain Acrylic (`#ffffff`, `border-radius: 24px - 32px`).
-  * Accents: Apple Azure (`#0284c7`), Soft Lilac (`#7e22ce`), Soft Amber (`#b45309`), Emerald (`#10b981`).
-* **Layout Structure**: Responsive 12-column Bento grid with `minmax(0, 1fr)` containment to prevent layout overflow.
-* **No Harsh Dark Clashes**: Pure white porcelain code consoles with clean syntax styling.
-
----
-
-## 📡 6. Key REST API Routes
-
-1. `POST /api/v1/analyze`: Upload file or raw text for asynchronous processing. Supports `Bearer <API_KEY>` auth.
-2. `POST /api/v1/chat`: Conversational legal assistant query with document context injection.
-3. `GET /api/v1/documents/<doc_id>/status`: Real-time processing status polling endpoint.
-4. `GET /api/v1/analytics`: Aggregate statistics (total docs, average bias score, document type breakdown).
-5. `GET /settings/export-audit-log`: Download user activity trail in CSV format.
+1. **`User`**: User accounts (`id`, `email`, `password_hash`, `full_name`, `role`, `organization`, `bio`, `created_at`).
+2. **`UserSetting`**: Per-user preferences (`default_summary_length`, `bias_threshold`, `pii_masking_enabled`, `ai_model`, `legal_domain`).
+3. **`LegalDocument`**: Document metadata (`title`, `doc_type`, `file_path`, `raw_text`, `status`: `queued`/`extracting`/`analyzing`/`completed`/`failed`).
+4. **`DocumentVersion`**: Revision tracking for document text diffs.
+5. **`Summary`**: Structured summary (`key_provisions`, `parties`, `monetary_terms`, `compliance_status`, `summary_text`).
+6. **`BiasReport`**: Bias audit results (`overall_score`, `primary_category`, `gender_bias_score`, `racial_bias_score`, `age_bias_score`, `disability_bias_score`, `socioeconomic_bias_score`, `flags_json`).
+7. **`Entity`**: Named entities (`entity_type`, `text`, `confidence_score`).
+8. **`ApiKey`**: User API access keys stored via SHA-256 hash.
+9. **`AuditLog`**: Security compliance trail (`action`, `details`, `ip_address`, `timestamp`).
+10. **`Tag` / `DocumentTag`**: Tagging system for documents.
 
 ---
 
-## 🧪 7. Automated Test Suite
-* Pytest test suite located in `tests/test_api.py` and `tests/test_auth.py`.
-* Run tests with: `pytest -v`
-* Tests verify session auth, duplicate email guards, API key validation, version diffing, document polling, and template rendering.
+## 🤖 AI & Bias Audit Pipeline Details (`services/ai_service.py`)
+
+- **5 Protected-Class Audits:** Scans for subtle and overt bias across:
+  - **Gender** (e.g. gendered roles, maternal penalties, exclusionary language)
+  - **Racial/Ethnic** (e.g. accent/origin penalties, discriminatory clauses)
+  - **Age** (e.g. `digital native`, compulsory retirement language)
+  - **Disability** (e.g. non-essential physical demands, lack of reasonable accommodation)
+  - **Socioeconomic** (e.g. zip-code filtering, credit score exclusions)
+- **Interactive Document Chat (`POST /api/v1/chat`):** Injects document text + active clause summary into prompt context for accurate, zero-hallucination legal Q&A.
+- **Privacy & PII Sanitizer:** Automatically redacts SSNs (`XXX-XX-XXXX`), credit card numbers, phone numbers, and email addresses before external API transmission.
+
+---
+
+## 🛠️ How to Run & Verify
+
+1. **Start Local Development Server:**
+   ```bash
+   python app.py
+   ```
+   *(App auto-creates tables and seeds demo account `demo@lexai.com` / `demo123` at `http://localhost:5000`)*
+
+2. **Run Production Server (Gunicorn):**
+   ```bash
+   gunicorn app:app
+   ```
+
+3. **Execute Automated Pytest Suite:**
+   ```bash
+   pytest -v
+   ```
+
+---
+
+## 🎯 Guidance for AI Assistants
+When assisting with this codebase:
+1. Always preserve the clean modular Flask Blueprint structure (`blueprints/`).
+2. Keep business logic and AI prompts in `services/ai_service.py`.
+3. Keep database schema definitions in `database.py`.
+4. Ensure all database mutations use `db.session.commit()` and wrap in try/except with `db.session.rollback()` on error.
+5. Use `gunicorn` as the WSGI web server for cloud deployments (Render, Railway, Koyeb, VPS).

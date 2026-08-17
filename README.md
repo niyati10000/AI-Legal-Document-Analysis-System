@@ -13,6 +13,9 @@
 **Hostedlink**
 https://niyati1.pythonanywhere.com/
 
+**Last Updated**: August 18, 2026  
+**Status**: ✅ Production Stable
+
 ## 🚀 Quick Start (Flask)
 
 ### 1. Installation
